@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="g" cx="85%" cy="10%" r="110%">
+      <stop offset="0" stop-color="#16a877"/>
+      <stop offset=".65" stop-color="#0a3a2b"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="0" fill="url(#g)"/>
+  <!-- pote -->
+  <path d="M196 132h120" stroke="#fff" stroke-width="26" stroke-linecap="round"/>
+  <path d="M186 172h140c34 24 56 60 56 104v62c0 30-24 54-54 54H184c-30 0-54-24-54-54v-62c0-44 22-80 56-104z" fill="#fff" opacity=".96"/>
+  <path d="M130 300c42 22 84 22 126 0s84-22 126 0v38c0 30-24 54-54 54H184c-30 0-54-24-54-54z" fill="#25c48d"/>
+  <!-- moeda -->
+  <circle cx="256" cy="262" r="44" fill="#f5b829"/>
+  <text x="256" y="279" font-family="Arial, sans-serif" font-size="48" font-weight="800" fill="#7a5200" text-anchor="middle">$</text>
+</svg>

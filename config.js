@@ -5,6 +5,6 @@
 // Quem protege os dados são as regras de segurança (RLS) do arquivo supabase/schema.sql:
 // cada pessoa só consegue ler e alterar os próprios dados.
 window.BANCO_CONFIG = {
-  supabaseUrl: '',      // ex: 'https://abcdefghijkl.supabase.co'
-  supabaseAnonKey: '',  // ex: 'eyJhbGciOiJIUzI1NiIsInR5cCI6...'
+  supabaseUrl: 'https://fwcxvehxaalpepvkqqzb.supabase.co',
+  supabaseAnonKey: 'sb_publishable_bheitPO6BQ2lDwvK8DDMLw_1FVRttR4', // chave pública (publishable/anon), nunca a service_role
 };

@@ -1,16 +1,46 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Logo do Banco do Murilo: um "papel de parede" de colina no céu azul, com uma moeda de ouro brilhante -->
   <defs>
-    <radialGradient id="g" cx="85%" cy="10%" r="110%">
-      <stop offset="0" stop-color="#16a877"/>
-      <stop offset=".65" stop-color="#0a3a2b"/>
+    <linearGradient id="ceu" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2f74e6"/>
+      <stop offset=".55" stop-color="#6eb2fb"/>
+      <stop offset="1" stop-color="#bfe0ff"/>
+    </linearGradient>
+    <linearGradient id="morro" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8fe05a"/>
+      <stop offset=".5" stop-color="#4cb22c"/>
+      <stop offset="1" stop-color="#2d8a1c"/>
+    </linearGradient>
+    <linearGradient id="morro2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6cc844"/>
+      <stop offset="1" stop-color="#3a9a24"/>
+    </linearGradient>
+    <radialGradient id="ouro" cx=".38" cy=".32" r=".75">
+      <stop offset="0" stop-color="#fff6c4"/>
+      <stop offset=".35" stop-color="#ffd54a"/>
+      <stop offset=".8" stop-color="#e9a514"/>
+      <stop offset="1" stop-color="#b9780a"/>
     </radialGradient>
+    <linearGradient id="brilho" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity=".75"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <clipPath id="forma"><rect width="512" height="512" rx="112"/></clipPath>
   </defs>
-  <rect width="512" height="512" rx="0" fill="url(#g)"/>
-  <!-- pote -->
-  <path d="M196 132h120" stroke="#fff" stroke-width="26" stroke-linecap="round"/>
-  <path d="M186 172h140c34 24 56 60 56 104v62c0 30-24 54-54 54H184c-30 0-54-24-54-54v-62c0-44 22-80 56-104z" fill="#fff" opacity=".96"/>
-  <path d="M130 300c42 22 84 22 126 0s84-22 126 0v38c0 30-24 54-54 54H184c-30 0-54-24-54-54z" fill="#25c48d"/>
-  <!-- moeda -->
-  <circle cx="256" cy="262" r="44" fill="#f5b829"/>
-  <text x="256" y="279" font-family="Arial, sans-serif" font-size="48" font-weight="800" fill="#7a5200" text-anchor="middle">$</text>
+  <g clip-path="url(#forma)">
+    <rect width="512" height="512" fill="url(#ceu)"/>
+    <ellipse cx="130" cy="120" rx="90" ry="22" fill="#fff" opacity=".55"/>
+    <ellipse cx="370" cy="88" rx="70" ry="16" fill="#fff" opacity=".45"/>
+    <path d="M0 350 C 120 300, 230 300, 330 330 C 410 352, 470 345, 512 330 L512 512 L0 512 Z" fill="url(#morro2)"/>
+    <path d="M0 400 C 110 330, 260 320, 380 365 C 440 388, 485 392, 512 388 L512 512 L0 512 Z" fill="url(#morro)"/>
+    <!-- moeda -->
+    <circle cx="256" cy="262" r="118" fill="#8a5a05" opacity=".35" transform="translate(6 10)"/>
+    <circle cx="256" cy="256" r="118" fill="url(#ouro)" stroke="#9c6a06" stroke-width="8"/>
+    <circle cx="256" cy="256" r="92" fill="none" stroke="#c98a0e" stroke-width="6" opacity=".7"/>
+    <text x="256" y="300" font-family="Trebuchet MS, Arial, sans-serif" font-size="128" font-weight="700" font-style="italic" fill="#8a5605" text-anchor="middle">M</text>
+    <text x="252" y="294" font-family="Trebuchet MS, Arial, sans-serif" font-size="128" font-weight="700" font-style="italic" fill="#fff4c2" text-anchor="middle" opacity=".55">M</text>
+    <ellipse cx="236" cy="190" rx="78" ry="40" fill="url(#brilho)"/>
+    <!-- reflexo de vidro no topo, bem anos 2000 -->
+    <path d="M0 0 H512 V170 C 380 205, 140 205, 0 170 Z" fill="#fff" opacity=".16"/>
+  </g>
 </svg>

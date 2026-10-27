@@ -128,6 +128,7 @@
     target: svg('<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2"/>'),
     gear: svg('<path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/>'),
     plus: svg('<path d="M12 5v14M5 12h14"/>', 2.4),
+    minus: svg('<path d="M5 12h14"/>', 2.6),
     eye: svg('<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'),
     eyeOff: svg('<path d="M3 3l18 18M10.6 5.1A10 10 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3.2 4.2M6.6 6.6C3.9 8.4 2 12 2 12s3.5 7 10 7c1.9 0 3.6-.6 5-1.4M9.9 9.9a3 3 0 0 0 4.2 4.2"/>'),
     chevL: svg('<path d="M15 18l-6-6 6-6"/>', 2.4),
@@ -145,6 +146,9 @@
     cloud: svg('<path d="M7 18.5a4.5 4.5 0 0 1-.5-8.97A6 6 0 0 1 18 10a4.25 4.25 0 0 1-.5 8.5z"/>'),
     calendar: svg('<rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/>'),
     logout: svg('<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>'),
+    trendUp: svg('<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>'),
+    trendDown: svg('<path d="M3 7l6 6 4-4 8 8"/><path d="M15 17h6v-6"/>'),
+    bell: svg('<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/>'),
     flame: svg('<path d="M12 3c.9 3.6 5 5.6 5 10.2a5 5 0 0 1-10 0c0-2.3 1-3.8 2.2-5 .3 1.6 1.1 2.7 2.3 3.1C11 8.8 11.2 5.9 12 3z"/>'),
   };
 
@@ -609,7 +613,9 @@
       <button class="month-label" data-action="month-today">${monthLabel(UI.month)}${UI.month === curMonth() ? '<em>atual</em>' : ''}</button>
       <button data-action="month-next" aria-label="Próximo mês">${ICON.chevR}</button>
     </div>`;
-  const emptyBox = (big, title, text, btn = '') => `<div class="empty"><div class="big">${big}</div><b>${title}</b>${text}${btn}</div>`;
+  // Estados vazios usam ícones desenhados, não emoji
+  const EMPTY_ICON = { '🍃': 'list', '🧾': 'file', '🔍': 'search', '🗓️': 'calendar', '🫙': 'jar', '🎯': 'target', '⚖️': 'chart', '💳': 'card', '🤝': 'people', '✅': 'list', '📊': 'chart', '📈': 'trendUp', '💰': 'plus', '🔥': 'flame' };
+  const emptyBox = (big, title, text, btn = '') => `<div class="empty"><div class="big">${EMPTY_ICON[big] ? ICON[EMPTY_ICON[big]] : big}</div><b>${title}</b>${text}${btn}</div>`;
 
   function txRow(tx) {
     const future = tx.date > todayStr();
@@ -684,13 +690,13 @@
     const list = [];
     const isCur = ym === curMonth();
     const t = todayStr();
-    if (!S.transactions.length) list.push({ ic: '👋', tone: 'good', text: 'Comece registrando seu primeiro gasto ou receita no botão <b>+</b>.' });
+    if (!S.transactions.length) list.push({ ic: ICON.plus, tone: 'good', text: 'Comece registrando seu primeiro gasto ou receita no botão <b>+</b>.' });
 
     if (isCur) for (const c of cards()) {
       const inv = cardInfo(c).closed;
       if (inv.remaining <= 0) continue;
       const d = diffDays(t, inv.due);
-      if (d <= 5) list.push({ ic: '💳', tone: d < 0 ? 'danger' : 'warn', text: `Fatura <b>${esc(c.name)}</b> ${d < 0 ? 'está atrasada' : d === 0 ? 'vence hoje' : `vence em ${d} dia${d > 1 ? 's' : ''}`} · ${fmt(inv.remaining)}`, btn: { label: 'Pagar', action: 'card-pay', id: c.id } });
+      if (d <= 5) list.push({ ic: ICON.card, tone: d < 0 ? 'danger' : 'warn', text: `Fatura <b>${esc(c.name)}</b> ${d < 0 ? 'está atrasada' : d === 0 ? 'vence hoje' : `vence em ${d} dia${d > 1 ? 's' : ''}`} · ${fmt(inv.remaining)}`, btn: { label: 'Pagar', action: 'card-pay', id: c.id } });
     }
     if (isCur) for (const db of S.debts) {
       const rem = debtRemaining(db);
@@ -698,13 +704,13 @@
       const d = diffDays(t, db.due);
       if (d > 3) continue;
       const when = d < 0 ? ' (passou do combinado)' : d === 0 ? ' (combinado para hoje)' : '';
-      list.push({ ic: '🤝', tone: d < 0 ? 'danger' : 'warn', text: db.type === 'owed' ? `<b>${esc(db.person)}</b> te deve ${fmt(rem)}${when}` : `Você deve ${fmt(rem)} para <b>${esc(db.person)}</b>${when}`, btn: { label: 'Ver', action: 'debt-detail', id: db.id } });
+      list.push({ ic: ICON.people, tone: d < 0 ? 'danger' : 'warn', text: db.type === 'owed' ? `<b>${esc(db.person)}</b> te deve ${fmt(rem)}${when}` : `Você deve ${fmt(rem)} para <b>${esc(db.person)}</b>${when}`, btn: { label: 'Ver', action: 'debt-detail', id: db.id } });
     }
     if (isCur) for (const b of S.bills) {
       if (b.type === 'income') continue;
       const s = billStatus(b, ym);
       if (['late', 'today', 'soon'].includes(s.key)) {
-        list.push({ ic: '🧾', tone: s.key === 'late' ? 'danger' : 'warn', text: `<b>${esc(b.name)}</b> ${s.key === 'late' ? 'está atrasada' : s.label.toLowerCase()} · ${fmt(b.amount)}`, btn: { label: 'Pagar', action: 'bill-pay', id: b.id } });
+        list.push({ ic: ICON.bell, tone: s.key === 'late' ? 'danger' : 'warn', text: `<b>${esc(b.name)}</b> ${s.key === 'late' ? 'está atrasada' : s.label.toLowerCase()} · ${fmt(b.amount)}`, btn: { label: 'Pagar', action: 'bill-pay', id: b.id } });
       }
     }
     for (const c of S.categories) {
@@ -717,18 +723,18 @@
       const day = new Date().getDate(), dim = daysInMonth(ym);
       const spentSoFar = S.transactions.filter((x) => x.type === 'expense' && x.date.startsWith(ym) && x.date <= t).reduce((s, x) => s + x.amount, 0);
       if (spentSoFar > 0 && day >= 5 && day < dim) {
-        list.push({ ic: '🔮', tone: '', text: `No ritmo atual, você deve gastar cerca de <b>${fmt(Math.round((spentSoFar / day) * dim))}</b> este mês.` });
+        list.push({ ic: ICON.chart, tone: '', text: `No ritmo atual, você deve gastar cerca de <b>${fmt(Math.round((spentSoFar / day) * dim))}</b> este mês.` });
       }
       const prev = addMonths(ym, -1);
       const prevSame = S.transactions.filter((x) => x.type === 'expense' && x.date.startsWith(prev) && Number(x.date.slice(8)) <= day).reduce((s, x) => s + x.amount, 0);
       if (prevSame > 0 && spentSoFar > 0) {
         const diff = (spentSoFar - prevSame) / prevSame;
-        if (Math.abs(diff) >= 0.05) list.push({ ic: diff < 0 ? '📉' : '📈', tone: diff < 0 ? 'good' : 'warn', text: `Até hoje você gastou <b>${Math.abs(Math.round(diff * 100))}% ${diff < 0 ? 'menos' : 'mais'}</b> que no mesmo período de ${monthName(prev).toLowerCase()}.` });
+        if (Math.abs(diff) >= 0.05) list.push({ ic: diff < 0 ? ICON.trendDown : ICON.trendUp, tone: diff < 0 ? 'good' : 'warn', text: `Até hoje você gastou <b>${Math.abs(Math.round(diff * 100))}% ${diff < 0 ? 'menos' : 'mais'}</b> que no mesmo período de ${monthName(prev).toLowerCase()}.` });
       }
     }
     const avail = totalAvailable();
     if (st.net > 0 && st.inc > 0 && S.pots.length && avail > 0) {
-      list.push({ ic: '🫙', tone: 'good', text: `Sobrou <b>${fmt(st.net)}</b> em ${monthName(ym).toLowerCase()}. Que tal guardar uma parte?`, btn: { label: 'Guardar', action: 'pot-distribute', amount: Math.min(st.net, avail) } });
+      list.push({ ic: ICON.jar, tone: 'good', text: `Sobrou <b>${fmt(st.net)}</b> em ${monthName(ym).toLowerCase()}. Que tal guardar uma parte?`, btn: { label: 'Guardar', action: 'pot-distribute', amount: Math.min(st.net, avail) } });
     }
     if (!list.length) return '';
     const w = { danger: 0, warn: 1, good: 2, '': 3 };
@@ -752,15 +758,18 @@
     return `<div class="page">
       <div class="home-top">
         <section class="hero">
-          <div class="hero-row"><span class="hero-label">Saldo disponível</span>
-            <button class="hero-eye" data-action="toggle-hide" aria-label="Mostrar ou ocultar valores">${S.settings.hideValues ? ICON.eyeOff : ICON.eye}</button></div>
-          <div class="hero-value">${fmt(avail)}</div>
-          <div class="hero-split">
-            <div><small>🫙 Nos potes</small><b>${fmt(inPots)}</b></div>
-            <div><small>💎 Patrimônio</small><b>${fmt(avail + inPots - debt)}</b></div>
+          <h2 class="hero-value">${fmt(avail)}</h2>
+          <p class="hero-sub">livres nas suas contas agora.${inPots ? ` Mais <b>${fmt(inPots)}</b> guardados nos potes` : ''}${debt ? `${inPots ? ' e' : ' Há'} <b>${fmt(debt)}</b> em faturas de cartão` : ''}${inPots || debt ? '.' : ''}</p>
+          <div class="hero-meta">
+            <button class="hero-fc" data-action="forecast"><span>Previsão para ${ddmm(fc.endDate)}</span><b>${fmt(fc.end)}</b></button>
+            <div><span>Patrimônio</span><b>${fmt(avail + inPots - debt)}</b></div>
+            ${cashAccounts().length > 1 ? cashAccounts().map((a) => `<div><span>${esc(a.name)}</span><b>${fmt(accBalance(a.id))}</b></div>`).join('') : ''}
           </div>
-          ${S.accounts.length > 1 ? `<div class="hero-accs">${cashAccounts().map((a) => `<span>${a.icon} ${esc(a.name)} · ${fmt(accBalance(a.id))}</span>`).join('')}${debt ? `<span>💳 Cartões · ${fmt(-debt)}</span>` : ''}</div>` : ''}
-          <button class="hero-fc" data-action="forecast"><span>📅 Previsão para ${ddmm(fc.endDate)}</span><b>${fmt(fc.end)}</b>${ICON.chevR}</button>
+          <div class="hero-actions">
+            <button class="btn primary" data-action="new-tx" data-type="expense">${ICON.minus} Gasto</button>
+            <button class="btn" data-action="new-tx" data-type="income">${ICON.plus} Receita</button>
+            <a class="btn" href="#potes">${ICON.jar} Guardar</a>
+          </div>
         </section>
         <div class="stack">
           ${monthNav()}
@@ -892,7 +901,7 @@
       <section class="card pots-hero">
         <div><small>Total guardado nos potes</small><div class="big">${fmt(total)}</div>
           <small>${S.pots.length} pote${S.pots.length === 1 ? '' : 's'}${goalSum ? ` · ${Math.floor((goalSaved / goalSum) * 100)}% das metas alcançado` : ''}</small></div>
-        <div class="row-btns"><button class="btn ghost" data-action="pot-distribute">⚡ Distribuir</button><button class="btn primary" data-action="pot-new">${ICON.plus} Novo pote</button></div>
+        <div class="row-btns"><button class="btn ghost" data-action="pot-distribute">${ICON.swap} Distribuir</button><button class="btn primary" data-action="pot-new">${ICON.plus} Novo pote</button></div>
       </section>
       ${S.pots.length ? `<div class="pots-grid">${cards}</div>` : `<section class="card">${emptyBox('🫙', 'Separe seu dinheiro em potes', 'Crie potes para cada objetivo — reserva de emergência, viagem, um celular novo… e acompanhe quanto falta.')}</section>`}
       ${tplHtml}
@@ -1000,7 +1009,7 @@
           <button class="btn ghost" data-action="import-json">${ICON.up} Importar backup</button>
           <button class="btn ghost" data-action="export-csv">${ICON.file} Planilha (CSV)</button>
           <button class="btn ghost" data-action="import-statement">${ICON.up} Importar extrato do banco</button>
-          ${installPrompt ? '<button class="btn soft" data-action="install">📲 Instalar app</button>' : ''}
+          ${installPrompt ? '<button class="btn primary" data-action="install">Instalar app</button>' : ''}
         </div>
         ${!installPrompt ? `<p class="muted small" style="margin-top:12px">📲 <b>Usar como app:</b> ${isIOS ? 'no Safari, toque em Compartilhar → “Adicionar à Tela de Início”.' : 'no menu do navegador, escolha “Instalar app” ou “Adicionar à tela inicial”.'}</p>` : ''}
       </section>
@@ -1023,41 +1032,69 @@
     relatorios: { title: 'Relatórios', icon: 'chart', render: viewRelatorios, sub: 'Seu ano em números' },
     ajustes: { title: 'Ajustes', icon: 'gear', render: viewAjustes, sub: 'Conta, categorias e backup' },
   };
-  const MAIN_NAV = ['inicio', 'extrato', 'potes', 'planejar'];
-  const MORE = ['semgastar', 'cartoes', 'dividas', 'relatorios', 'ajustes'];
+  const MORE = ['planejar', 'semgastar', 'cartoes', 'dividas', 'relatorios', 'ajustes'];
   const currentView = () => { const r = location.hash.slice(1); return VIEWS[r] ? r : 'inicio'; };
 
   function renderShell() {
     const link = (id) => `<a href="#${id}" data-nav="${id}">${ICON[VIEWS[id].icon]}<span>${VIEWS[id].title}</span></a>`;
     $('.side-nav').innerHTML = Object.keys(VIEWS).map(link).join('');
-    $('.bottomnav').innerHTML = MAIN_NAV.map(link).join('') + `<button data-action="more" data-nav="more">${ICON.dots}<span>Mais</span></button>`;
+    // Barra de tarefas: o botão verde (no lugar do "Iniciar") lança um gasto; à direita, o relógio
+    $('.bottomnav').innerHTML = `<button class="nav-add" data-action="new-tx" aria-label="Novo lançamento">${ICON.plus}<span>Lançar</span></button>`
+      + `<div class="tasks">${link('inicio')}${link('extrato')}${link('potes')}<button data-action="more" data-nav="more">${ICON.dots}<span>Mais</span></button></div>`
+      + '<div class="tray"><span id="clock"></span></div>';
+    const tick = () => { const c = $('#clock'); if (c) c.textContent = new Intl.DateTimeFormat('pt-BR', { hour: '2-digit', minute: '2-digit' }).format(new Date()); };
+    tick();
+    setInterval(tick, 20000);
   }
   function renderTop(view) {
     let title = VIEWS[view].title, sub = VIEWS[view].sub || '';
     if (view === 'inicio') {
       const h = new Date().getHours();
       const first = (S.settings.name || '').trim().split(/\s+/)[0];
-      title = `${h < 5 ? 'Boa noite' : h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite'}${first ? ', ' + esc(first) : ''} 👋`;
+      title = `${h < 5 ? 'Boa noite' : h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite'}${first ? ', ' + esc(first) : ''}.`;
       sub = cap(new Intl.DateTimeFormat('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date()));
     }
-    $('#topbar').innerHTML = `<div><h1>${title}</h1>${sub ? `<div class="sub">${sub}</div>` : ''}</div>
-      <div class="top-actions">
-        <span data-sync-slot>${syncPill()}</span>
-        <button class="icon-btn" data-action="toggle-hide" aria-label="Mostrar ou ocultar valores" title="Ocultar valores">${S.settings.hideValues ? ICON.eyeOff : ICON.eye}</button>
+    // Barra de título da janela + cabeçalho da página
+    $('#topbar').innerHTML = `<div class="titlebar">
+        <span class="tb-icon">${ICON[VIEWS[view].icon]}</span>
+        <span class="tb-title">${VIEWS[view].title} — Banco do Murilo</span>
+        <div class="top-actions">
+          <span data-sync-slot>${syncPill()}</span>
+          <button class="icon-btn" data-action="toggle-hide" aria-label="Mostrar ou ocultar valores" title="Ocultar valores">${S.settings.hideValues ? ICON.eyeOff : ICON.eye}</button>
+        </div>
+      </div>
+      <div class="pagehead">
+        <div><h1>${title}</h1>${sub ? `<div class="sub">${sub}</div>` : ''}</div>
         <button class="btn primary desk-only" data-action="new-tx">${ICON.plus} Novo lançamento</button>
       </div>`;
+  }
+  let lastView = null, fabObs = null;
+  // No início, o botão + some enquanto os botões Gasto/Receita/Guardar estão na tela
+  function watchFab() {
+    if (fabObs) fabObs.disconnect();
+    document.body.classList.remove('fab-off');
+    const t = $('.hero-actions');
+    if (!t || !('IntersectionObserver' in window)) return;
+    fabObs = new IntersectionObserver(([e]) => document.body.classList.toggle('fab-off', e.isIntersecting));
+    fabObs.observe(t);
   }
   function render() {
     if (!started) return;
     const view = currentView();
+    document.body.dataset.section = view;
     renderTop(view);
     $('#view').innerHTML = VIEWS[view].render();
+    // Trocar de seção vira a página a partir da aba (em dois quadros, como uma folha)
+    if (view !== lastView) { const v = $('#view'); v.classList.remove('turn'); void v.offsetWidth; v.classList.add('turn'); lastView = view; }
     VIEWS[view].mount?.();
+    const board = getComputedStyle(document.body).getPropertyValue('--board').trim();
+    if (board) $('meta[name=theme-color]').setAttribute('content', board);
     $$('[data-nav]').forEach((a) => a.classList.toggle('on', a.dataset.nav === view || (a.dataset.nav === 'more' && MORE.includes(view))));
     const avail = totalAvailable(), pots = totalPots(), debt = cardDebt();
     $('#side-foot').innerHTML = `<small>Patrimônio total</small><b>${fmt(avail + pots - debt)}</b><small style="margin-top:4px">${fmt(avail)} livre · ${fmt(pots)} nos potes${debt ? ` · ${fmt(debt)} em cartões` : ''}</small>`;
     hideTip();
     xhActive = null;
+    watchFab();
     checkMedals();
   }
   function applyTheme() {
@@ -1434,7 +1471,7 @@
         <div class="pot-actions three">
           <button class="btn primary" data-action="pot-move" data-id="${id}" data-dir="in">${ICON.down} Guardar</button>
           <button class="btn ghost" data-action="pot-move" data-id="${id}" data-dir="out">${ICON.up} Resgatar</button>
-          <button class="btn ghost" data-action="pot-yield" data-id="${id}">📈 Rendeu</button>
+          <button class="btn ghost" data-action="pot-yield" data-id="${id}">${ICON.chart} Rendeu</button>
         </div>
         <h4 class="section-title">Simulador</h4>
         <div class="sim">
@@ -1551,7 +1588,7 @@
     const perc = {};
     S.pots.forEach((p) => (perc[p.id] = anySet ? p.percent || 0 : Math.floor(100 / S.pots.length)));
     openModal({
-      title: '⚡ Distribuir nos potes',
+      title: 'Distribuir nos potes',
       body: `<form class="form" autocomplete="off" novalidate>
         <p class="muted small">Recebeu salário ou sobrou dinheiro? Divida entre seus potes de uma vez só.</p>
         <label class="amount-field"><span>R$</span><input name="amount" inputmode="decimal" placeholder="0,00" value="${toInput(preset)}" aria-label="Valor a distribuir"></label>
@@ -1618,7 +1655,7 @@
     const cats = S.categories.filter((c) => c.type === 'expense');
     const avg = avgByCat(3);
     openModal({
-      title: '🎯 Orçamentos mensais',
+      title: 'Orçamentos mensais',
       body: `<form class="form" autocomplete="off" novalidate>
         <p class="muted small">Quanto você quer gastar, no máximo, em cada categoria por mês? Deixe em branco para não limitar.</p>
         <div>${cats.map((c) => `<label class="dist-row"><span class="tx-ic" style="--c:${c.color}">${c.icon}</span>
@@ -2190,7 +2227,7 @@
     if (!st) return '';
     const m = st.byMonth[curMonth()] || 0;
     return `<a class="streak" href="#semgastar">
-      <span class="streak-flame${st.current ? ' on' : ''}">🔥</span>
+      <span class="streak-flame${st.current ? ' on' : ''}">${ICON.flame}</span>
       <span class="streak-main"><b>${st.current} ${st.current === 1 ? 'dia' : 'dias'} sem gastar</b><small>${st.todayClean ? 'Hoje ainda limpo' : 'Hoje teve gasto'} · recorde ${st.best}</small>
         <span class="bar thin"><i style="width:${Math.min(100, (m / st.goal) * 100)}%;--c:var(--flame)"></i></span></span>
       <span class="streak-goal"><b>${m}/${st.goal}</b><small>no mês</small></span></a>`;
@@ -2260,7 +2297,7 @@
       : st.todayClean ? 'Hoje ainda está limpo. Segura firme até amanhã!' : 'Hoje teve gasto. Amanhã começa uma sequência nova.';
     return `<div class="page">
       <section class="ns-hero">
-        <div class="ns-flame${st.current ? ' on' : ''}">🔥</div>
+        <div class="ns-flame${st.current ? ' on' : ''}">${ICON.flame}</div>
         <div><div class="ns-num">${st.current}</div><div class="ns-lbl">${st.current === 1 ? 'dia seguido' : 'dias seguidos'} sem gastar</div></div>
         <div class="ns-side"><small>Recorde</small><b>${st.best} ${st.best === 1 ? 'dia' : 'dias'}</b><small>No total</small><b>${st.total} ${st.total === 1 ? 'dia' : 'dias'}</b></div>
         <p class="ns-msg">${msg}</p>
@@ -2283,7 +2320,7 @@
   }
   function nsGoalModal() {
     openModal({
-      title: '🎯 Meta de dias sem gastar', size: 'small',
+      title: 'Meta de dias sem gastar', size: 'small',
       body: `<form class="form" novalidate><label class="field"><span>Quantos dias por mês?</span><input name="goal" type="number" min="1" max="31" inputmode="numeric" value="${S.settings.nsGoal || 10}"><small>Comece com algo possível, tipo 8 ou 10. Dá para aumentar depois.</small></label><button class="btn primary block" type="submit">Salvar meta</button></form>`,
       onMount(w, close) {
         const f = $('form', w);
@@ -2392,7 +2429,7 @@
     const fc = forecast(), t = todayStr();
     let run = fc.now;
     openModal({
-      title: '📅 Previsão do mês',
+      title: 'Previsão do mês',
       body: `<p class="muted small">Quanto deve sobrar nas suas contas até ${shortDate(fc.endDate)}, contando o que já está combinado.</p>
         <div class="fc-row fc-now"><span>Saldo hoje</span><b>${fmt(fc.now)}</b></div>
         ${fc.items.length ? fc.items.map((i) => {
@@ -2866,11 +2903,11 @@
   function moreSheet() {
     openModal({
       title: 'Mais',
-      body: `<div class="more-grid">${MORE.map((id) => `<a href="#${id}" class="more-item" data-close>${ICON[VIEWS[id].icon]}<b>${VIEWS[id].title}</b><small>${VIEWS[id].sub}</small></a>`).join('')}</div>
+      body: `<div class="more-grid">${MORE.map((id) => `<a href="#${id}" class="more-item" data-nav="${id}" data-close>${ICON[VIEWS[id].icon]}<b>${VIEWS[id].title}</b><small>${VIEWS[id].sub}</small></a>`).join('')}</div>
         <div class="btn-grid">
           <button class="btn ghost" data-action="import-statement">${ICON.up} Importar extrato</button>
-          <button class="btn ghost" data-action="pot-distribute">⚡ Distribuir nos potes</button>
-          <button class="btn ghost" data-action="forecast">📅 Previsão do mês</button>
+          <button class="btn ghost" data-action="pot-distribute">${ICON.swap} Distribuir nos potes</button>
+          <button class="btn ghost" data-action="forecast">${ICON.calendar} Previsão do mês</button>
           ${S.accounts.length > 1 ? `<button class="btn ghost" data-action="transfer">${ICON.swap} Transferir entre contas</button>` : ''}
         </div>`,
     });
@@ -2879,7 +2916,7 @@
     const p = getPot(potId);
     if (!p) return;
     openModal({
-      title: `📈 Rendimento · ${esc(p.name)}`, size: 'small',
+      title: `Rendimento · ${esc(p.name)}`, size: 'small',
       body: `<form class="form" autocomplete="off" novalidate>
         <p class="muted small">Quanto o dinheiro desse pote rendeu (CDB, caixinha, poupança…)? Esse valor não sai de nenhuma conta.</p>
         <label class="amount-field"><span>R$</span><input name="amount" inputmode="decimal" placeholder="0,00" aria-label="Valor do rendimento"></label>
@@ -3122,7 +3159,7 @@
     const a = el.dataset.action, id = el.dataset.id;
     if (el.closest('.modal-wrap')) closeTop(); // ações dentro de um modal abrem outro no lugar
     switch (a) {
-      case 'new-tx': txModal(null); break;
+      case 'new-tx': txModal(null, { type: el.dataset.type }); break;
       case 'edit-tx': { const tx = S.transactions.find((t) => t.id === id); if (tx) txModal(tx); break; }
       case 'month-prev': UI.month = addMonths(UI.month, -1); UI.filters.day = ''; render(); break;
       case 'month-next': UI.month = addMonths(UI.month, 1); UI.filters.day = ''; render(); break;

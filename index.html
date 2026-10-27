@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#f3f2ee">
+  <meta name="theme-color" content="#245edb">
   <meta name="description" content="Controle seus gastos, separe dinheiro em potes e acompanhe suas metas.">
   <title>Banco do Murilo</title>
   <link rel="manifest" href="manifest.webmanifest">
@@ -15,7 +15,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,400;0,600;0,700;1,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <script>
     // Aplica o tema antes de pintar a tela, para não piscar
@@ -26,30 +26,37 @@
     } catch (e) {}
   </script>
 </head>
-<body>
+<body data-section="inicio">
+  <!--
+    THESIS: O Banco do Murilo como um programa do Windows XP, modernizado: janela com barra de título azul brilhante, painel de tarefas à esquerda, barra de tarefas embaixo com o botão verde de lançar. Recusa o app de banco genérico de cartões brancos e roxo.
+    OWN-WORLD: Céu azul claro com colina verde ao fundo; janelas com barra de título em gradiente azul (grafite no escuro); painéis com cabeçalho em gradiente; botões em relevo com brilho laranja no foco; botão verde estilo "Iniciar"; barras de progresso em blocos verdes; balões amarelos de aviso; Trebuchet nos títulos e Tahoma no texto.
+    STORY: Murilo abre, vê o saldo grande na janela de Início, aperta o botão verde "Lançar" na barra de tarefas e registra um gasto em segundos; acha as outras seções pelo painel de tarefas (PC) ou pelo menu Mais (celular).
+    FIRST VIEWPORT: Papel de parede de céu e colina; janela com barra de título "Início — Banco do Murilo"; saudação em azul; painel do saldo com o valor grande, frase com potes e cartões, faixa de detalhes e botões Gasto (verde), Receita e Guardar; barra de tarefas azul fixa embaixo com "Lançar" verde à esquerda e o relógio à direita (PC).
+    FORM: Estilo fixado pelo próprio Murilo ("bem anos 2000, Windows XP, modernizado, confortável, com modo escuro"); sem sorteio de direção.
+    FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+  -->
   <div id="auth" class="auth">
     <div class="auth-card"><img src="icon.svg" class="auth-logo" alt=""><div class="spinner"></div></div>
   </div>
 
   <div class="app" hidden>
-    <aside class="sidebar">
-      <a class="brand" href="#inicio"><img src="icon.svg" alt=""><span>Banco do Murilo</span></a>
-      <nav class="side-nav" aria-label="Principal"></nav>
-      <button class="btn primary block" data-action="new-tx">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-        Novo lançamento
-      </button>
-      <div class="side-foot" id="side-foot"></div>
-    </aside>
-
-    <div class="content">
+    <div class="window">
       <header class="topbar" id="topbar"></header>
-      <main id="view"></main>
+      <div class="window-body">
+        <aside class="sidebar">
+          <a class="brand" href="#inicio"><img src="icon.svg" alt=""><span>Banco do Murilo</span></a>
+          <nav class="side-nav" aria-label="Seções"></nav>
+          <div class="side-foot" id="side-foot"></div>
+        </aside>
+        <div class="content">
+          <main id="view"></main>
+        </div>
+      </div>
     </div>
 
-    <nav class="bottomnav" aria-label="Principal"></nav>
+    <nav class="bottomnav" aria-label="Barra de tarefas"></nav>
     <button class="fab" data-action="new-tx" aria-label="Novo lançamento">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
     </button>
   </div>
 

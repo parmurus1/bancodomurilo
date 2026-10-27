@@ -1,7 +1,7 @@
 // Service worker: permite abrir o app sem internet.
 // Rede primeiro (para sempre pegar a versão nova), cache como reserva.
 // As chamadas ao Supabase nunca passam pelo cache.
-const CACHE = 'banco-do-murilo-v3';
+const CACHE = 'banco-do-murilo-v4';
 const ASSETS = ['./', './index.html', './styles.css', './app.js', './config.js', './manifest.webmanifest', './icon.svg'];
 
 self.addEventListener('install', (e) => {

@@ -145,6 +145,7 @@
     cloud: svg('<path d="M7 18.5a4.5 4.5 0 0 1-.5-8.97A6 6 0 0 1 18 10a4.25 4.25 0 0 1-.5 8.5z"/>'),
     calendar: svg('<rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/>'),
     logout: svg('<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>'),
+    flame: svg('<path d="M12 3c.9 3.6 5 5.6 5 10.2a5 5 0 0 1-10 0c0-2.3 1-3.8 2.2-5 .3 1.6 1.1 2.7 2.3 3.1C11 8.8 11.2 5.9 12 3z"/>'),
   };
 
   // ================= Dados =================
@@ -189,7 +190,7 @@
       potMoves: [],     // {id, potId, accountId, amount (+ guardou / − resgatou), date, note, createdAt}
       bills: [],        // {id, type: expense|income, name, amount, day, categoryId, accountId, auto, paid: {'AAAA-MM': txId}}
       debts: [],        // {id, person, type: owed (me devem) | owe (eu devo), amount, desc, date, due, payments: [{id, amount, date, txId}]}
-      settings: { name: '', theme: 'auto', hideValues: false, onboarded: false },
+      settings: { name: '', theme: 'auto', hideValues: false, onboarded: false, nsGoal: 10, medals: [] },
     };
   }
   const COLLECTIONS = ['accounts', 'categories', 'transactions', 'pots', 'potMoves', 'bills', 'debts'];
@@ -652,7 +653,7 @@
     const arcs = segs.map((s) => {
       const len = (s.value / total) * c;
       const gap = segs.length > 1 ? 2 : 0;
-      const el = `<circle r="${r}" cx="70" cy="70" fill="none" stroke="${s.color}" stroke-width="18" stroke-dasharray="${Math.max(len - gap, 0.01)} ${c}" stroke-dashoffset="${-off}" transform="rotate(-90 70 70)"><title>${esc(s.name)}: ${fmt(s.value)}</title></circle>`;
+      const el = `<circle r="${r}" cx="70" cy="70" fill="none" stroke="${s.color}" stroke-width="18" stroke-dasharray="${Math.max(len - gap, 0.01)} ${c}" stroke-dashoffset="${-off}" transform="rotate(-90 70 70)" data-tip="${esc(`<b>${s.icon} ${esc(s.name)}</b><br>${fmt(s.value)} · ${Math.round((s.value / total) * 100)}%`)}"></circle>`;
       off += len;
       return el;
     }).join('');
@@ -670,7 +671,8 @@
     months.forEach((m, i) => {
       const cx = gw * i + gw / 2;
       const hi = (m.inc / max) * ch, he = (m.exp / max) * ch;
-      s += `<rect class="hit" data-action="month-set" data-ym="${m.ym}" x="${gw * i + 2}" y="0" width="${gw - 4}" height="${H}" rx="8" fill="transparent"/>`;
+      const tip = `<b>${monthName(m.ym)} ${m.ym.slice(0, 4)}</b><span class="tip-row"><i style="background:var(--pos)"></i>Entradas<b>${fmt(m.inc)}</b></span><span class="tip-row"><i style="background:var(--neg)"></i>Saídas<b>${fmt(m.exp)}</b></span><span class="tip-row">Resultado<b>${fmt(m.inc - m.exp, { sign: true })}</b></span>`;
+      s += `<rect class="hit" data-action="month-set" data-ym="${m.ym}" x="${gw * i + 2}" y="0" width="${gw - 4}" height="${H}" rx="8" fill="transparent" data-tip="${esc(tip)}"/>`;
       if (m.inc) s += `<rect x="${cx - bw - 2}" y="${top + ch - hi}" width="${bw}" height="${hi}" rx="4" fill="var(--pos)" pointer-events="none"/>`;
       if (m.exp) s += `<rect x="${cx + 2}" y="${top + ch - he}" width="${bw}" height="${he}" rx="4" fill="var(--neg)" opacity=".85" pointer-events="none"/>`;
       s += `<text x="${cx}" y="${H - 6}" class="${m.ym === cur ? 'cur' : ''}" pointer-events="none">${monthShort(m.ym)}</text>`;
@@ -767,19 +769,23 @@
             <div class="stat"><small><i class="dot neg"></i>Saídas</small><b>${fmt(st.exp)}</b></div>
             <div class="stat"><small>Resultado</small><b class="${st.net >= 0 ? 'pos-t' : 'neg-t'}">${fmt(st.net, { sign: true })}</b></div>
           </div>
+          ${streakHome()}
           ${insightsHtml(ym, st)}
         </div>
       </div>
       <div class="grid2">
+        ${paceCard(ym)}
         <section class="card"><div class="card-head"><h3>Gastos por categoria</h3><small>${monthLabel(ym)}</small></div>
           ${st.exp ? donutBlock(catSegments(st.byCat), st.exp) : emptyBox('🍃', 'Nenhum gasto neste mês', '')}</section>
+      </div>
+      <div class="grid2">
         <section class="card"><div class="card-head"><h3>Últimos 6 meses</h3><small>toque num mês</small></div>
           ${barsSvg(months, ym)}
           <div class="chart-key"><span><i style="background:var(--pos)"></i>Entradas</span><span><i style="background:var(--neg)"></i>Saídas</span></div></section>
+        <section class="card"><div class="card-head"><h3>Seus potes</h3><a class="link" href="#potes">Ver todos</a></div>
+          <div class="pot-row">${pots}<button class="pot-mini add" data-action="pot-new">＋<br>Novo pote</button></div></section>
       </div>
       ${cardsHome()}
-      <section class="card"><div class="card-head"><h3>Seus potes</h3><a class="link" href="#potes">Ver todos</a></div>
-        <div class="pot-row">${pots}<button class="pot-mini add" data-action="pot-new">＋<br>Novo pote</button></div></section>
       <section class="card"><div class="card-head"><h3>Últimos lançamentos</h3><a class="link" href="#extrato">Ver extrato</a></div>
         ${recent.length ? `<div class="tx-list">${recent.map(txRow).join('')}</div>` : emptyBox('🧾', 'Nada por aqui ainda', 'Seus lançamentos vão aparecer aqui.', '<br><button class="btn primary" data-action="new-tx">Registrar o primeiro</button>')}</section>
     </div>`;
@@ -1011,13 +1017,14 @@
     extrato: { title: 'Extrato', icon: 'list', render: viewExtrato, mount: renderTxList, sub: 'Tudo que entrou e saiu' },
     potes: { title: 'Potes', icon: 'jar', render: viewPotes, sub: 'Separe dinheiro e bata suas metas' },
     planejar: { title: 'Planejar', icon: 'target', render: viewPlanejar, sub: 'Orçamentos, fixos do mês e equilíbrio' },
+    semgastar: { title: 'Sem gastar', icon: 'flame', render: viewSemGastar, mount: () => { const h = $('.hm-wrap'); if (h) h.scrollLeft = h.scrollWidth; }, sub: 'Sequências, metas e medalhas' },
     cartoes: { title: 'Cartões', icon: 'card', render: viewCartoes, sub: 'Faturas, limite e vencimentos' },
     dividas: { title: 'Dívidas', icon: 'people', render: viewDividas, sub: 'Quem te deve e para quem você deve' },
     relatorios: { title: 'Relatórios', icon: 'chart', render: viewRelatorios, sub: 'Seu ano em números' },
     ajustes: { title: 'Ajustes', icon: 'gear', render: viewAjustes, sub: 'Conta, categorias e backup' },
   };
   const MAIN_NAV = ['inicio', 'extrato', 'potes', 'planejar'];
-  const MORE = ['cartoes', 'dividas', 'relatorios', 'ajustes'];
+  const MORE = ['semgastar', 'cartoes', 'dividas', 'relatorios', 'ajustes'];
   const currentView = () => { const r = location.hash.slice(1); return VIEWS[r] ? r : 'inicio'; };
 
   function renderShell() {
@@ -1049,6 +1056,9 @@
     $$('[data-nav]').forEach((a) => a.classList.toggle('on', a.dataset.nav === view || (a.dataset.nav === 'more' && MORE.includes(view))));
     const avail = totalAvailable(), pots = totalPots(), debt = cardDebt();
     $('#side-foot').innerHTML = `<small>Patrimônio total</small><b>${fmt(avail + pots - debt)}</b><small style="margin-top:4px">${fmt(avail)} livre · ${fmt(pots)} nos potes${debt ? ` · ${fmt(debt)} em cartões` : ''}</small>`;
+    hideTip();
+    xhActive = null;
+    checkMedals();
   }
   function applyTheme() {
     const t = S.settings.theme;
@@ -2017,6 +2027,271 @@
     return s;
   }
 
+  // ================= Dicas dos gráficos (passar o mouse ou tocar) =================
+  const XH = {}; // dados dos gráficos de linha com cruz de leitura, por id
+  let xhActive = null;
+  function showTip(html, x, y) {
+    let el = $('#chart-tip');
+    if (!el) { el = document.createElement('div'); el.id = 'chart-tip'; el.className = 'chart-tip'; document.body.appendChild(el); }
+    el.innerHTML = html;
+    el.hidden = false;
+    const r = el.getBoundingClientRect();
+    let left = x + 14, top = y - r.height - 12;
+    if (left + r.width > innerWidth - 8) left = x - r.width - 14;
+    if (left < 8) left = 8;
+    if (top < 8) top = y + 18;
+    el.style.left = left + 'px';
+    el.style.top = top + 'px';
+  }
+  function hideTip() { const el = $('#chart-tip'); if (el) el.hidden = true; }
+  function xhairMove(svgEl, e) {
+    const c = XH[svgEl.dataset.xhair];
+    if (!c) return;
+    const r = svgEl.getBoundingClientRect();
+    const vx = ((e.clientX - r.left) / r.width) * c.W;
+    const i = Math.max(0, Math.min(c.n - 1, Math.round((vx - c.l) / (c.step || 1))));
+    const x = c.l + i * c.step;
+    const g = svgEl.querySelector('.xh');
+    g.setAttribute('transform', `translate(${x},0)`);
+    g.style.opacity = 1;
+    c.series.forEach((s, k) => {
+      const dot = svgEl.querySelector(`.xh-dot[data-k="${k}"]`), v = s.values[i];
+      if (v == null) dot.style.opacity = 0;
+      else { dot.setAttribute('cx', x); dot.setAttribute('cy', c.y(v)); dot.style.opacity = 1; }
+    });
+    const rows = [...c.series].reverse().map((s) => (s.values[i] == null ? '' : `<span class="tip-row"><i style="background:${s.color}"></i>${esc(s.name)}<b>${fmt(s.values[i])}</b></span>`)).join('');
+    showTip(`<b>${esc(c.label(i))}</b>${rows}`, e.clientX, e.clientY);
+    xhActive = svgEl;
+  }
+  function resetXhair(svgEl) { svgEl.querySelectorAll('.xh, .xh-dot').forEach((el) => (el.style.opacity = 0)); hideTip(); }
+
+  // Linhas acumuladas com cruz de leitura: um ponto por índice, null = sem dado
+  function xhairLine({ id, n, series, label, ticks = [] }) {
+    const W = 420, H = 210, l = 6, r = 66, top = 18, bottom = 24, cw = W - l - r, ch = H - top - bottom;
+    const dataMax = Math.max(1, ...series.flatMap((s) => s.values.filter((v) => v != null)));
+    const max = dataMax * 1.08;
+    const step = n > 1 ? cw / (n - 1) : 0;
+    const x = (i) => l + i * step, y = (v) => top + ch - (v / max) * ch;
+    XH[id] = { W, l, step, n, y, series, label };
+    let s = `<svg class="line xh-chart" viewBox="0 0 ${W} ${H}" data-xhair="${id}" role="img" aria-label="${esc(series.map((x) => x.name).join(' e '))}">`;
+    [0.5, 1].forEach((f) => {
+      const gy = y(dataMax * f);
+      s += `<line x1="${l}" x2="${W - r}" y1="${gy}" y2="${gy}" stroke="var(--line)" stroke-dasharray="3 4"/><text x="${l}" y="${gy - 5}" class="ax">${fmtShort(Math.round(dataMax * f))}</text>`;
+    });
+    s += `<line x1="${l}" x2="${W - r}" y1="${top + ch}" y2="${top + ch}" stroke="var(--line)"/>`;
+    const ends = [];
+    series.forEach((se) => {
+      let d = '', last = -1;
+      se.values.forEach((v, i) => { if (v == null) return; d += `${d ? 'L' : 'M'}${x(i).toFixed(1)},${y(v).toFixed(1)}`; last = i; });
+      if (!d) return;
+      s += `<path d="${d}" fill="none" stroke="${se.color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"${se.dash ? ' stroke-dasharray="5 5"' : ''}/>`;
+      s += `<circle cx="${x(last)}" cy="${y(se.values[last])}" r="4" fill="${se.color}" stroke="var(--surface)" stroke-width="2"/>`;
+      ends.push({ x: x(last), y: y(se.values[last]), v: se.values[last], muted: !!se.dash });
+    });
+    // Rótulo no fim de cada linha, afastando os que ficariam um em cima do outro
+    ends.sort((a, b) => a.y - b.y);
+    for (let i = 1; i < ends.length; i++) if (Math.abs(ends[i].x - ends[i - 1].x) < 80 && ends[i].y - ends[i - 1].y < 14) ends[i].y = ends[i - 1].y + 14;
+    ends.forEach((e) => { s += `<text x="${e.x + 8}" y="${e.y + 4}" class="end${e.muted ? ' muted' : ''}">${fmtShort(e.v)}</text>`; });
+    ticks.forEach((i) => { s += `<text x="${x(i)}" y="${H - 6}" class="tick">${i + 1}</text>`; });
+    s += `<g class="xh" style="opacity:0"><line y1="${top}" y2="${top + ch}" stroke="var(--muted)" stroke-dasharray="2 3"/></g>`;
+    series.forEach((se, k) => { s += `<circle class="xh-dot" data-k="${k}" r="5" fill="${se.color}" stroke="var(--surface)" stroke-width="2" style="opacity:0"/>`; });
+    return s + `<rect x="0" y="0" width="${W}" height="${H}" fill="transparent"/></svg>`;
+  }
+
+  // Ritmo do mês: gasto acumulado dia a dia, comparado com o mês anterior
+  function paceCard(ym) {
+    const prev = addMonths(ym, -1), n = daysInMonth(ym), cm = curMonth();
+    const lastCur = ym < cm ? n : ym === cm ? new Date().getDate() : 0;
+    const cum = (m, lastDay) => {
+      const per = new Array(n).fill(0);
+      for (const x of S.transactions) {
+        if (x.type !== 'expense' || !x.date.startsWith(m)) continue;
+        const i = Number(x.date.slice(8)) - 1;
+        if (i < n) per[i] += x.amount;
+      }
+      let acc = 0;
+      return per.map((v, i) => (i < lastDay ? (acc += v) : null));
+    };
+    const cur = cum(ym, lastCur), old = cum(prev, daysInMonth(prev));
+    const head = '<div class="card-head"><h3>Ritmo de gastos</h3><small>acumulado dia a dia</small></div>';
+    if (!lastCur || (!cur[lastCur - 1] && !old.some(Boolean))) return `<section class="card">${head}${emptyBox('📈', 'Nada para comparar ainda', 'Assim que tiver gastos no mês, a curva aparece aqui.')}</section>`;
+    const now = cur[lastCur - 1] || 0, then = old[Math.min(lastCur, old.length) - 1] || 0;
+    let chip = '';
+    if (then > 0) {
+      const d = Math.round(((now - then) / then) * 100);
+      chip = `<span class="chip-stat ${d <= 0 ? 'good' : 'bad'}">${d <= 0 ? '▼' : '▲'} ${Math.abs(d)}% vs ${monthShort(prev)}</span>`;
+    }
+    return `<section class="card">${head}
+      <div class="pace-head"><div><small>${lastCur === n ? 'No mês todo' : `Até o dia ${lastCur}`}</small><b>${fmt(now)}</b></div>${chip}</div>
+      ${xhairLine({ id: 'pace', n, label: (i) => `Dia ${i + 1}`, ticks: [0, 9, 19, n - 1], series: [
+        { name: monthName(prev), values: old, color: 'var(--faint)', dash: true },
+        { name: monthName(ym), values: cur, color: 'var(--accent)' },
+      ] })}
+      <div class="chart-key"><span><i style="background:var(--accent)"></i>${monthName(ym)}</span><span><i class="dash"></i>${monthName(prev)}</span></div></section>`;
+  }
+
+  // ================= Dias sem gastar =================
+  // Só gastos do dia a dia contam: fixos do mês e parcelas seguintes não quebram a sequência.
+  function dailySpending() {
+    const fixed = new Set();
+    S.bills.forEach((b) => Object.values(b.paid || {}).forEach((id) => fixed.add(id)));
+    const m = new Map();
+    for (const t of S.transactions) {
+      if (t.type !== 'expense' || fixed.has(t.id) || String(t.id).startsWith('auto-')) continue;
+      if (t.group && !/\(1\/\d+\)$/.test(t.desc)) continue;
+      m.set(t.date, (m.get(t.date) || 0) + t.amount);
+    }
+    return m;
+  }
+  function noSpendStats() {
+    const t = todayStr();
+    let first = null;
+    for (const x of S.transactions) if (x.date <= t && (!first || x.date < first)) first = x.date;
+    if (!first) return null;
+    const spend = dailySpending(), byMonth = {};
+    let run = 0, best = 0, total = 0;
+    for (let d = first; d <= t; d = shiftDay(d, 1)) {
+      if (spend.has(d)) { run = 0; continue; }
+      run++; total++;
+      if (run > best) best = run;
+      byMonth[d.slice(0, 7)] = (byMonth[d.slice(0, 7)] || 0) + 1;
+    }
+    const goal = S.settings.nsGoal || 10;
+    const bestMonth = Math.max(0, ...Object.values(byMonth));
+    // Quanto você costuma gastar num dia com gasto (últimos 90 dias)
+    const since = shiftDay(t, -90);
+    let sum = 0, n = 0;
+    spend.forEach((v, d) => { if (d >= since && d <= t) { sum += v; n++; } });
+    return { first, spend, current: run, best, total, byMonth, goal, bestMonth, avgDay: n ? Math.round(sum / n) : 0, todayClean: !spend.has(t) };
+  }
+  const NS_MEDALS = [
+    { id: 'd1', icon: '🌱', name: 'Primeiro passo', desc: '1 dia sem gastar', test: (s) => s.total >= 1 },
+    { id: 's3', icon: '🔥', name: 'Esquentando', desc: '3 dias seguidos', test: (s) => s.best >= 3 },
+    { id: 's7', icon: '⚡', name: 'Semana limpa', desc: '7 dias seguidos', test: (s) => s.best >= 7 },
+    { id: 's14', icon: '💎', name: 'Duas semanas', desc: '14 dias seguidos', test: (s) => s.best >= 14 },
+    { id: 's30', icon: '👑', name: 'Mês de monge', desc: '30 dias seguidos', test: (s) => s.best >= 30 },
+    { id: 'goal', icon: '🎯', name: 'Meta batida', desc: 'Bater a meta de um mês', test: (s) => s.bestMonth >= s.goal },
+    { id: 'm15', icon: '🏆', name: 'Meio mês', desc: '15 dias num mesmo mês', test: (s) => s.bestMonth >= 15 },
+    { id: 't50', icon: '🧱', name: 'Constância', desc: '50 dias no total', test: (s) => s.total >= 50 },
+    { id: 't100', icon: '🚀', name: 'Centenário', desc: '100 dias no total', test: (s) => s.total >= 100 },
+  ];
+  function checkMedals() {
+    const st = noSpendStats();
+    if (!st) return;
+    const have = new Set(S.settings.medals || []);
+    const fresh = NS_MEDALS.filter((m) => !have.has(m.id) && m.test(st));
+    if (!fresh.length) return;
+    S.settings.medals = [...have, ...fresh.map((m) => m.id)];
+    save();
+    setTimeout(() => { confetti(); toast(fresh.length === 1 ? `Medalha nova: ${fresh[0].icon} ${fresh[0].name}!` : `${fresh.length} medalhas novas! 🏅`); }, 500);
+  }
+  function streakHome() {
+    const st = noSpendStats();
+    if (!st) return '';
+    const m = st.byMonth[curMonth()] || 0;
+    return `<a class="streak" href="#semgastar">
+      <span class="streak-flame${st.current ? ' on' : ''}">🔥</span>
+      <span class="streak-main"><b>${st.current} ${st.current === 1 ? 'dia' : 'dias'} sem gastar</b><small>${st.todayClean ? 'Hoje ainda limpo' : 'Hoje teve gasto'} · recorde ${st.best}</small>
+        <span class="bar thin"><i style="width:${Math.min(100, (m / st.goal) * 100)}%;--c:var(--flame)"></i></span></span>
+      <span class="streak-goal"><b>${m}/${st.goal}</b><small>no mês</small></span></a>`;
+  }
+  function nsCalendar(ym, st) {
+    const dim = daysInMonth(ym), first = parseDate(`${ym}-01`).getDay(), t = todayStr();
+    let cells = WEEK.map((w) => `<span class="cal-wd">${w.charAt(0)}</span>`).join('');
+    for (let i = 0; i < first; i++) cells += '<span></span>';
+    for (let d = 1; d <= dim; d++) {
+      const date = `${ym}-${pad(d)}`;
+      const cls = date > t || date < st.first ? 'na' : st.spend.has(date) ? 'spent' : 'ok';
+      const tip = cls === 'na' ? (date > t ? 'Ainda não chegou' : 'Antes de você começar a registrar') : cls === 'ok' ? 'Sem gastos 🌱' : `Gastou ${fmt(st.spend.get(date))}`;
+      cells += `<button class="ns-day ${cls}${date === t ? ' today' : ''}" data-action="cal-day" data-d="${date}" data-tip="${esc(`<b>${dateLabel(date)}</b><br>${tip}`)}">${d}</button>`;
+    }
+    return `<div class="ns-cal">${cells}</div>
+      <div class="ns-legend"><span><i class="ok"></i>Sem gastar</span><span><i class="spent"></i>Gastou</span><span><i class="na"></i>Fora do período</span></div>`;
+  }
+  function nsMonthsChart(st) {
+    const months = Array.from({ length: 12 }, (_, i) => addMonths(curMonth(), i - 11));
+    const vals = months.map((m) => st.byMonth[m] || 0);
+    const W = 400, H = 170, top = 18, bottom = 22, ch = H - top - bottom;
+    const max = Math.max(st.goal, ...vals, 1) * 1.12, gw = W / 12, bw = Math.min(24, gw * 0.55);
+    const y = (v) => top + ch - (v / max) * ch;
+    const bestI = vals.indexOf(Math.max(...vals));
+    let s = `<svg class="bars" viewBox="0 0 ${W} ${H}" role="img" aria-label="Dias sem gastar por mês">`;
+    s += `<line x1="0" x2="${W}" y1="${top + ch}" y2="${top + ch}" stroke="var(--line)"/>`;
+    vals.forEach((v, i) => {
+      const cx = gw * i + gw / 2, m = months[i];
+      if (v) s += `<rect x="${cx - bw / 2}" y="${y(v)}" width="${bw}" height="${top + ch - y(v)}" rx="4" fill="var(--flame)" pointer-events="none"/>`;
+      if (v && (i === 11 || i === bestI)) s += `<text x="${cx}" y="${y(v) - 6}" class="val" pointer-events="none">${v}</text>`;
+      s += `<rect class="hit" x="${gw * i + 2}" y="0" width="${gw - 4}" height="${H}" rx="8" fill="transparent" data-tip="${esc(`<b>${monthName(m)} ${m.slice(0, 4)}</b><br>${v} ${v === 1 ? 'dia' : 'dias'} sem gastar${v >= st.goal ? ' · meta batida 🎯' : ''}`)}"/>`;
+      s += `<text x="${cx}" y="${H - 6}" class="${i === 11 ? 'cur' : ''}" pointer-events="none">${monthShort(m)}</text>`;
+    });
+    s += `<line x1="0" x2="${W}" y1="${y(st.goal)}" y2="${y(st.goal)}" stroke="var(--ink)" stroke-opacity=".45" stroke-dasharray="4 4" pointer-events="none"/>`;
+    s += `<text x="4" y="${y(st.goal) - 5}" class="ax-l" pointer-events="none">meta ${st.goal}</text>`;
+    return s + '</svg>';
+  }
+  // Mapa do ano no estilo "contribuições": verde = sem gastar, vermelho mais forte = gastou mais
+  function yearHeatmap(st) {
+    const t = todayStr(), cell = 12, gap = 3, left = 28, top = 16;
+    let start = shiftDay(t, -364);
+    start = shiftDay(start, -parseDate(start).getDay());
+    const vals = [...st.spend.values()].sort((a, b) => a - b);
+    const q = (p) => vals[Math.floor((vals.length - 1) * p)] || 0;
+    const cuts = [q(0.25), q(0.5), q(0.75)];
+    const level = (v) => (v <= cuts[0] ? 1 : v <= cuts[1] ? 2 : v <= cuts[2] ? 3 : 4);
+    let cells = '', labels = '', i = 0, lastMonth = '';
+    for (let d = start; d <= t; d = shiftDay(d, 1), i++) {
+      const col = Math.floor(i / 7), row = i % 7, x = left + col * (cell + gap), y = top + row * (cell + gap);
+      if (row === 0 && d.slice(5, 7) !== lastMonth) { lastMonth = d.slice(5, 7); if (col > 0 || Number(d.slice(8)) <= 7) labels += `<text x="${x}" y="10">${monthShort(d.slice(0, 7))}</text>`; }
+      const v = st.spend.get(d);
+      const cls = d < st.first ? 'na' : v ? `l${level(v)}` : 'ok';
+      const tip = cls === 'na' ? 'Antes de você começar' : v ? `Gastou ${fmt(v)}` : 'Sem gastos 🌱';
+      cells += `<rect x="${x}" y="${y}" width="${cell}" height="${cell}" rx="2.5" class="${cls}" data-tip="${esc(`<b>${dateLabel(d)}</b><br>${tip}`)}"/>`;
+    }
+    const W = left + Math.ceil(i / 7) * (cell + gap), H = top + 7 * (cell + gap);
+    const wd = [[1, 'seg'], [3, 'qua'], [5, 'sex']].map(([r, n]) => `<text x="0" y="${top + r * (cell + gap) + 10}">${n}</text>`).join('');
+    return `<div class="hm-wrap"><svg class="hm" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Dias com e sem gastos no último ano">${labels}${wd}${cells}</svg></div>
+      <div class="hm-legend"><i class="ok"></i>Sem gastar<span class="sp"></span>Gastou: menos<i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="l4"></i>mais</div>`;
+  }
+  function viewSemGastar() {
+    const st = noSpendStats();
+    if (!st) return `<div class="page"><section class="card">${emptyBox('🔥', 'Registre seus gastos para começar', 'Os dias sem gastar, suas sequências e medalhas aparecem aqui assim que você tiver lançamentos.')}</section></div>`;
+    const ym = UI.month, m = st.byMonth[ym] || 0;
+    const earned = new Set(S.settings.medals || []);
+    const msg = st.current > 1 && st.current >= st.best ? '🏆 Você está no seu recorde! Cada dia agora é um recorde novo.'
+      : st.todayClean ? 'Hoje ainda está limpo. Segura firme até amanhã!' : 'Hoje teve gasto. Amanhã começa uma sequência nova.';
+    return `<div class="page">
+      <section class="ns-hero">
+        <div class="ns-flame${st.current ? ' on' : ''}">🔥</div>
+        <div><div class="ns-num">${st.current}</div><div class="ns-lbl">${st.current === 1 ? 'dia seguido' : 'dias seguidos'} sem gastar</div></div>
+        <div class="ns-side"><small>Recorde</small><b>${st.best} ${st.best === 1 ? 'dia' : 'dias'}</b><small>No total</small><b>${st.total} ${st.total === 1 ? 'dia' : 'dias'}</b></div>
+        <p class="ns-msg">${msg}</p>
+      </section>
+      ${monthNav()}
+      <div class="grid2">
+        <section class="card"><div class="card-head"><h3>Meta do mês</h3><button class="btn sm ghost" data-action="ns-goal">Mudar meta</button></div>
+          <div class="ns-goal"><b>${m}</b><span>de ${st.goal} dias sem gastar</span></div>
+          <div class="bar"><i style="width:${Math.min(100, (m / st.goal) * 100)}%;--c:var(--flame)"></i></div>
+          <p class="muted small" style="margin-top:8px">${m >= st.goal ? '🎯 Meta batida! ' : `Faltam ${st.goal - m} ${st.goal - m === 1 ? 'dia' : 'dias'}. `}${st.avgDay && m ? `Num dia com gasto você costuma gastar ${fmt(st.avgDay)}, então esses dias valem uns <b>${fmt(st.avgDay * m)}</b> que ficaram no bolso.` : ''}</p>
+          ${nsCalendar(ym, st)}
+        </section>
+        <section class="card"><div class="card-head"><h3>Dias sem gastar por mês</h3><small>últimos 12 meses</small></div>${nsMonthsChart(st)}</section>
+      </div>
+      <section class="card"><div class="card-head"><h3>Seu último ano</h3><small>cada quadrado é um dia</small></div>${yearHeatmap(st)}</section>
+      <section class="card"><div class="card-head"><h3>Medalhas</h3><small>${NS_MEDALS.filter((x) => earned.has(x.id)).length} de ${NS_MEDALS.length}</small></div>
+        <div class="medals">${NS_MEDALS.map((md) => `<div class="medal${earned.has(md.id) ? ' on' : ''}"><span>${md.icon}</span><b>${md.name}</b><small>${md.desc}</small></div>`).join('')}</div></section>
+      <p class="muted small">Só conta o gasto do dia a dia. Os fixos do mês (aluguel, internet…) e as parcelas de compras antigas não quebram a sequência.</p>
+    </div>`;
+  }
+  function nsGoalModal() {
+    openModal({
+      title: '🎯 Meta de dias sem gastar', size: 'small',
+      body: `<form class="form" novalidate><label class="field"><span>Quantos dias por mês?</span><input name="goal" type="number" min="1" max="31" inputmode="numeric" value="${S.settings.nsGoal || 10}"><small>Comece com algo possível, tipo 8 ou 10. Dá para aumentar depois.</small></label><button class="btn primary block" type="submit">Salvar meta</button></form>`,
+      onMount(w, close) {
+        const f = $('form', w);
+        f.onsubmit = (e) => { e.preventDefault(); S.settings.nsGoal = Math.min(31, Math.max(1, Number(f.elements.goal.value) || 10)); save(); close(); render(); toast('Meta salva 🎯'); };
+      },
+    });
+  }
+
   // ================= Cartões de crédito =================
   function cardsHome() {
     const cs = cards();
@@ -2282,7 +2557,7 @@
 
   // ================= Relatórios =================
   function lineSvg(pts) {
-    const W = 560, H = 190, l = 12, r = 12, top = 24, bottom = 24, ch = H - top - bottom, cw = W - l - r;
+    const W = 420, H = 190, l = 12, r = 12, top = 24, bottom = 24, ch = H - top - bottom, cw = W - l - r;
     let min = Math.min(...pts.map((p) => p.v)), max = Math.max(...pts.map((p) => p.v));
     if (min === max) { min -= 10000; max += 10000; }
     const padv = (max - min) * 0.12;
@@ -2296,12 +2571,68 @@
     s += `<path d="${line}L${x(li).toFixed(1)},${top + ch}L${x(0).toFixed(1)},${top + ch}Z" fill="var(--accent)" opacity=".12"/>`;
     s += `<path d="${line}" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
     pts.forEach((p, i) => {
-      s += `<circle cx="${x(i)}" cy="${y(p.v)}" r="${i === li ? 5 : 3}" fill="${i === li ? 'var(--accent)' : 'var(--surface)'}" stroke="var(--accent)" stroke-width="2"><title>${p.label}: ${fmt(p.v)}</title></circle>`;
+      s += `<circle cx="${x(i)}" cy="${y(p.v)}" r="${i === li ? 5 : 3}" fill="${i === li ? 'var(--accent)' : 'var(--surface)'}" stroke="var(--accent)" stroke-width="2"/>`;
+      s += `<circle cx="${x(i)}" cy="${y(p.v)}" r="14" fill="transparent" data-tip="${esc(`<b>Patrimônio em ${p.label}</b><br>${fmt(p.v)}`)}"/>`;
       s += `<text x="${x(i)}" y="${H - 6}" class="${p.cur ? 'cur' : ''}">${p.label}</text>`;
     });
     const lx = x(li), anchor = lx > W - 90 ? 'end' : lx < 90 ? 'start' : 'middle';
     s += `<text x="${lx}" y="${Math.max(14, y(pts[li].v) - 11)}" class="val" text-anchor="${anchor}">${fmtShort(pts[li].v)}</text>`;
     return s + '</svg>';
+  }
+  // Um mini-gráfico por categoria (cada um na própria escala): mostra a tendência sem depender de cor
+  function catMultiples(y, months) {
+    const ys = String(y), tot = {}, per = {}, cm = curMonth();
+    for (const tx of S.transactions) {
+      if (tx.type !== 'expense' || !tx.date.startsWith(ys)) continue;
+      const mi = Number(tx.date.slice(5, 7)) - 1;
+      tot[tx.categoryId] = (tot[tx.categoryId] || 0) + tx.amount;
+      (per[tx.categoryId] = per[tx.categoryId] || new Array(12).fill(0))[mi] += tx.amount;
+    }
+    const top = Object.entries(tot).sort((a, b) => b[1] - a[1]).slice(0, 6);
+    if (!top.length) return '';
+    const W = 240, H = 40, gw = W / 12;
+    const rows = top.map(([id, total]) => {
+      const c = getCat(id), vals = per[id], max = Math.max(1, ...vals);
+      const bars = vals.map((v, i) => {
+        const h = v ? Math.max(2, (v / max) * (H - 2)) : 0, m = months[i];
+        return `<rect x="${i * gw + 2}" y="${H - h}" width="${gw - 4}" height="${h}" rx="2" fill="${c.color}"${m > cm ? ' opacity=".3"' : ''} pointer-events="none"/>`
+          + `<rect x="${i * gw}" y="0" width="${gw}" height="${H}" fill="transparent" data-tip="${esc(`<b>${c.icon} ${esc(c.name)}</b> · ${monthName(m)}<br>${fmt(v)}`)}"/>`;
+      }).join('');
+      return `<div class="multi-row"><span class="multi-name">${c.icon} ${esc(c.name)}</span><svg viewBox="0 0 ${W} ${H}" class="spark" preserveAspectRatio="none" role="img" aria-label="${esc(c.name)} mês a mês">${bars}<line x1="0" x2="${W}" y1="${H - 0.5}" y2="${H - 0.5}" stroke="var(--line)"/></svg><b>${fmtShort(total)}</b></div>`;
+    }).join('');
+    return `<div class="multi">${rows}<div class="multi-axis"><span></span><span class="ma"><span>jan</span><span>jun</span><span>dez</span></span><span></span></div></div>`;
+  }
+  // Quanto sobrou do que entrou, mês a mês (positivo acima da linha, negativo abaixo)
+  function savingsSvg(stats, cm) {
+    const W = 400, H = 170, top = 14, bottom = 22, ch = H - top - bottom;
+    const rates = stats.map((s) => (s.inc ? Math.round(((s.inc - s.exp) / s.inc) * 100) : null));
+    const lim = Math.min(100, Math.max(20, ...rates.filter((r) => r != null).map(Math.abs)));
+    const zero = top + ch / 2, sc = ch / 2 / lim, gw = W / 12, bw = Math.min(22, gw * 0.55);
+    let s = `<svg class="bars" viewBox="0 0 ${W} ${H}" role="img" aria-label="Quanto sobrou por mês">`;
+    s += `<line x1="0" x2="${W}" y1="${zero}" y2="${zero}" stroke="var(--line)"/>`;
+    rates.forEach((r, i) => {
+      const cx = gw * i + gw / 2, m = stats[i].ym;
+      if (r != null) {
+        const v = Math.max(-lim, Math.min(lim, r)), h = Math.max(2, Math.abs(v) * sc);
+        s += `<rect x="${cx - bw / 2}" y="${v >= 0 ? zero - h : zero}" width="${bw}" height="${h}" rx="4" fill="${v >= 0 ? 'var(--pos)' : 'var(--neg)'}" pointer-events="none"/>`;
+      }
+      const tip = r == null ? `<b>${monthName(m)}</b><br>Sem receitas registradas` : `<b>${monthName(m)}</b><br>${r >= 0 ? `Sobrou ${r}% do que entrou` : `Gastou ${-r}% a mais do que entrou`}<br>${fmt(stats[i].inc - stats[i].exp, { sign: true })}`;
+      s += `<rect class="hit" x="${gw * i + 2}" y="0" width="${gw - 4}" height="${H}" rx="8" fill="transparent" data-tip="${esc(tip)}"/>`;
+      s += `<text x="${cx}" y="${H - 6}" class="${m === cm ? 'cur' : ''}" pointer-events="none">${monthShort(m)}</text>`;
+    });
+    return s + `<text x="2" y="${top + 8}" class="ax-l">+${lim}%</text><text x="2" y="${top + ch - 2}" class="ax-l">−${lim}%</text></svg>`;
+  }
+  function incomeSources(ys, inc) {
+    const by = {};
+    for (const tx of S.transactions) if (tx.type === 'income' && tx.date.startsWith(ys)) by[tx.categoryId] = (by[tx.categoryId] || 0) + tx.amount;
+    const rows = Object.entries(by).sort((a, b) => b[1] - a[1]);
+    if (!rows.length) return emptyBox('💰', 'Sem receitas no ano', '');
+    return `<div class="rep-table">${rows.map(([id, v]) => {
+      const c = getCat(id);
+      return `<div class="rep-row"><span class="tx-ic" style="--c:${c.color}">${c.icon}</span>
+        <span class="rep-main"><b>${esc(c.name)}</b><span class="bar thin"><i style="width:${(v / rows[0][1]) * 100}%;--c:var(--pos)"></i></span></span>
+        <span class="rep-val"><b>${fmt(v)}</b><small>${Math.round((v / inc) * 100)}% do que entrou</small></span></div>`;
+    }).join('')}</div>`;
   }
   function viewRelatorios() {
     const y = UI.year, ys = String(y), t = todayStr(), cm = curMonth();
@@ -2336,7 +2667,7 @@
       <div class="grid2">
         <section class="card"><div class="card-head"><h3>Evolução do patrimônio</h3><small>contas + potes − cartões</small></div>${pts.length ? lineSvg(pts) : ''}</section>
         <section class="card"><div class="card-head"><h3>Entradas e saídas</h3><small>toque num mês para ver o extrato</small></div>
-          ${barsSvg(stats.map((s) => ({ ym: s.ym, inc: s.inc, exp: s.exp })), cm, 560)}
+          ${barsSvg(stats.map((s) => ({ ym: s.ym, inc: s.inc, exp: s.exp })), cm, 420)}
           <div class="chart-key"><span><i style="background:var(--pos)"></i>Entradas</span><span><i style="background:var(--neg)"></i>Saídas</span></div></section>
       </div>
       <section class="card"><div class="card-head"><h3>Para onde foi o dinheiro</h3><small>${prevCat && Object.keys(prevCat).length ? `comparado com ${y - 1}` : ''}</small></div>
@@ -2346,6 +2677,11 @@
             <span class="rep-main"><b>${esc(c.name)}</b><span class="bar thin"><i style="width:${(v / cats[0][1]) * 100}%;--c:${c.color}"></i></span></span>
             <span class="rep-val"><b>${fmt(v)}</b><small>${Math.round((v / exp) * 100)}% · ${fmtShort(Math.round(v / active))}/mês${diff !== null ? ` · <span class="${diff > 0 ? 'neg-t' : 'pos-t'}">${diff > 0 ? '▲' : '▼'}${Math.abs(diff)}%</span>` : ''}</small></span></div>`;
         }).join('')}</div></section>
+      <section class="card"><div class="card-head"><h3>Categorias mês a mês</h3><small>cada linha na própria escala</small></div>${catMultiples(y, months)}</section>
+      <div class="grid2">
+        <section class="card"><div class="card-head"><h3>Quanto sobrou por mês</h3><small>% do que entrou</small></div>${savingsSvg(stats, cm)}</section>
+        <section class="card"><div class="card-head"><h3>De onde veio o dinheiro</h3><small>${y}</small></div>${incomeSources(ys, inc)}</section>
+      </div>
       <div class="grid2">
         <section class="card"><div class="card-head"><h3>Maiores gastos</h3></div><div class="tx-list">${top.map(txRow).join('')}</div></section>
         <section class="card"><div class="card-head"><h3>Gastos por dia da semana</h3></div>
@@ -2800,7 +3136,11 @@
       case 'year-today': UI.year = new Date().getFullYear(); render(); break;
       case 'toggle-all': UI.filters.all = !UI.filters.all; UI.filters.day = ''; render(); break;
       case 'ext-mode': UI.mode = el.dataset.v; UI.filters.day = ''; render(); break;
-      case 'cal-day': UI.filters.day = el.dataset.d; UI.mode = 'list'; render(); break;
+      case 'cal-day':
+        UI.filters.day = el.dataset.d; UI.filters.all = false; UI.month = el.dataset.d.slice(0, 7); UI.mode = 'list';
+        if (currentView() !== 'extrato') location.hash = '#extrato'; else render();
+        break;
+      case 'ns-goal': nsGoalModal(); break;
       case 'clear-day': UI.filters.day = ''; render(); break;
       case 'more': moreSheet(); break;
       case 'forecast': forecastModal(); break;
@@ -2871,6 +3211,18 @@
     if (s) { S.settings[s.dataset.setting] = s.value.trim(); save(); render(); }
   });
   window.addEventListener('hashchange', () => { render(); window.scrollTo(0, 0); });
+  // Dicas dos gráficos: mouse no PC, toque no celular
+  function chartPointer(e) {
+    const xh = e.target.closest && e.target.closest('[data-xhair]');
+    if (xh) { xhairMove(xh, e); return; }
+    if (xhActive) { resetXhair(xhActive); xhActive = null; }
+    const t = e.target.closest && e.target.closest('[data-tip]');
+    if (t) showTip(t.dataset.tip, e.clientX, e.clientY); else hideTip();
+  }
+  document.addEventListener('pointermove', chartPointer);
+  document.addEventListener('pointerdown', chartPointer);
+  window.addEventListener('scroll', hideTip, { passive: true });
+
   // Outra aba do mesmo navegador salvou: pega a versão nova
   window.addEventListener('storage', (e) => {
     if (!started || e.key !== dataKey()) return;

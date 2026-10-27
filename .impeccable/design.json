@@ -1,0 +1,230 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-26T23:30:00-03:00",
+  "title": "Design System: Banco do Murilo",
+  "extensions": {
+    "colorMeta": {
+      "title-blue": { "role": "primary", "displayName": "Luna Title Blue", "canonical": "linear-gradient(180deg, #5d9cf5 0%, #2f74e3 14%, #2463d6 50%, #1f58c8 86%, #1a4cb4 100%)", "tonalRamp": ["#000827", "#001d5a", "#003693", "#1453c5", "#3a7aef", "#70a3fe", "#aeccfe", "#e6effe"] },
+      "pane-blue": { "role": "primary", "displayName": "Task Pane Blue", "canonical": "linear-gradient(90deg, #2c64d4 0%, #4d8cf0 100%)", "tonalRamp": ["#000827", "#001d5a", "#003693", "#1453c5", "#3a7aef", "#70a3fe", "#aeccfe", "#e6effe"] },
+      "select-blue": { "role": "primary", "displayName": "Selection Blue", "canonical": "#316ac5", "tonalRamp": ["#000925", "#002054", "#00398b", "#2059b3", "#447edb", "#6ca4fe", "#adccfe", "#e6effe"] },
+      "head-ink": { "role": "primary", "displayName": "Heading Blue", "canonical": "#1f4fb5", "tonalRamp": ["#00062b", "#001a60", "#053397", "#2555bc", "#467ae4", "#73a2ff", "#b0cbff", "#e7effe"] },
+      "link": { "role": "primary", "displayName": "Link Blue", "canonical": "#1c4ab0" },
+      "start-green": { "role": "secondary", "displayName": "Start Green", "canonical": "linear-gradient(180deg, #74d26d 0%, #45b141 40%, #2f962d 60%, #2b8d29 100%)", "tonalRamp": ["#001000", "#012e01", "#014f02", "#037206", "#299927", "#55c050", "#7de877", "#ccffc7"] },
+      "start-edge": { "role": "secondary", "displayName": "Start Edge", "canonical": "#1f6b1d" },
+      "accent": { "role": "secondary", "displayName": "Meadow Green", "canonical": "#2f9e35", "tonalRamp": ["#001001", "#002e03", "#004f09", "#007212", "#299930", "#55c057", "#7de77d", "#cbffc9"] },
+      "accent-soft": { "role": "secondary", "displayName": "Mint Wash", "canonical": "#e4f4e3" },
+      "hover-glow": { "role": "tertiary", "displayName": "Hover Amber", "canonical": "#f5b742", "tonalRamp": ["#120900", "#312101", "#553a00", "#7b5603", "#a77600", "#d59810", "#fdbe4b", "#ffecce"] },
+      "danger-red": { "role": "tertiary", "displayName": "Close Red", "canonical": "linear-gradient(180deg, #f39a7f 0%, #e3582f 45%, #cf4220 100%)", "tonalRamp": ["#1f0000", "#4b0200", "#7c0501", "#af1207", "#da4535", "#ff7360", "#ffb5a9", "#ffe9e5"] },
+      "balloon": { "role": "tertiary", "displayName": "Tooltip Cream", "canonical": "#ffffe1", "tonalRamp": ["#0d0c00", "#26250e", "#424129", "#605f46", "#828267", "#a7a78b", "#cdcdb0", "#f1f1d3"] },
+      "balloon-edge": { "role": "tertiary", "displayName": "Balloon Edge", "canonical": "#6f6b58" },
+      "pos": { "role": "semantic", "displayName": "Gain Green", "canonical": "#237f2b", "tonalRamp": ["#001001", "#002e04", "#024e0d", "#0e711c", "#3e9642", "#64bc67", "#8be38c", "#cbffca"] },
+      "neg": { "role": "semantic", "displayName": "Spend Red", "canonical": "#cf3a2b", "tonalRamp": ["#1f0000", "#4b0200", "#7c0501", "#af1207", "#da4535", "#ff7360", "#ffb5a9", "#ffe9e5"] },
+      "warn": { "role": "semantic", "displayName": "Caution Amber", "canonical": "#e3a20f", "tonalRamp": ["#120900", "#322000", "#553a01", "#7b5603", "#a77601", "#d59807", "#febe46", "#ffecce"] },
+      "warn-ink": { "role": "semantic", "displayName": "Caution Ink", "canonical": "#875800" },
+      "flame": { "role": "semantic", "displayName": "Streak Orange", "canonical": "#ef7d1a", "tonalRamp": ["#170600", "#3b1a01", "#642f01", "#904701", "#c36203", "#f48122", "#feb98c", "#ffeadd"] },
+      "chrome-ink": { "role": "neutral", "displayName": "Chrome White", "canonical": "#ffffff" },
+      "sky-top": { "role": "neutral", "displayName": "Sky", "canonical": "linear-gradient(180deg, #b6d6f7 0%, #e5f1fc 66%)", "tonalRamp": ["#000c1c", "#0a253e", "#27425d", "#44607d", "#6683a2", "#89a8c8", "#afceef", "#e3f0fe"] },
+      "sky-bottom": { "role": "neutral", "displayName": "Sky Horizon", "canonical": "#e5f1fc" },
+      "win": { "role": "neutral", "displayName": "Window White", "canonical": "#f6f8fd", "tonalRamp": ["#0a0b0e", "#232427", "#3e4044", "#5c5d62", "#7e8084", "#a3a4a9", "#c8cacf", "#eceef3"] },
+      "panel": { "role": "neutral", "displayName": "Panel White", "canonical": "#ffffff" },
+      "panel-2": { "role": "neutral", "displayName": "Pale Panel", "canonical": "#f0f4fc" },
+      "btn-face": { "role": "neutral", "displayName": "Button Face", "canonical": "linear-gradient(180deg, #ffffff 0%, #f5f4ef 50%, #e7e5dc 100%)" },
+      "btn-edge": { "role": "neutral", "displayName": "Button Edge", "canonical": "#3a5a99" },
+      "panel-edge": { "role": "neutral", "displayName": "Panel Edge", "canonical": "#b9cbec", "tonalRamp": ["#020920", "#17233c", "#31405b", "#4e5e7b", "#70819f", "#94a5c5", "#b9cbec", "#e7effe"] },
+      "edge": { "role": "neutral", "displayName": "Frame Edge", "canonical": "#7f9bd8", "tonalRamp": ["#000232", "#0c1f51", "#263d72", "#435b94", "#647fba", "#87a4e1", "#b2cafe", "#e7effe"] },
+      "rule": { "role": "neutral", "displayName": "Rule", "canonical": "#dfe6f4" },
+      "ink": { "role": "neutral", "displayName": "Navy Ink", "canonical": "#1d2a44", "tonalRamp": ["#020920", "#17233d", "#31405b", "#4e5e7b", "#7080a0", "#94a5c6", "#b9cbed", "#e6efff"] },
+      "muted": { "role": "neutral", "displayName": "Slate", "canonical": "#55617b", "tonalRamp": ["#040a1e", "#1a233a", "#343f58", "#525d77", "#73809c", "#97a5c1", "#bdcbe8", "#e7effe"] },
+      "faint": { "role": "neutral", "displayName": "Faint", "canonical": "#8790a6" },
+      "title-graphite": { "role": "primary", "displayName": "Graphite Title (dark)", "canonical": "linear-gradient(180deg, #697284 0%, #474e5d 14%, #363c49 50%, #2c313c 86%, #23272f 100%)", "tonalRamp": ["#070b15", "#1e2430", "#3a404d", "#575e6c", "#79808f", "#9da5b4", "#c3cbdb", "#e7effe"] },
+      "pane-blue-dark": { "role": "primary", "displayName": "Night Pane (dark)", "canonical": "linear-gradient(90deg, #2c3a55 0%, #3f5478 100%)" },
+      "select-blue-dark": { "role": "primary", "displayName": "Selection Blue (dark)", "canonical": "#3d6fc2" },
+      "head-ink-dark": { "role": "primary", "displayName": "Heading Blue (dark)", "canonical": "#9cc2ff" },
+      "link-dark": { "role": "primary", "displayName": "Link Blue (dark)", "canonical": "#8cb8ff" },
+      "accent-dark": { "role": "secondary", "displayName": "Meadow Green (dark)", "canonical": "#5cc464" },
+      "accent-soft-dark": { "role": "secondary", "displayName": "Mint Wash (dark)", "canonical": "#1d2f20" },
+      "hover-glow-dark": { "role": "tertiary", "displayName": "Hover Amber (dark)", "canonical": "#d99a2b" },
+      "balloon-dark": { "role": "tertiary", "displayName": "Balloon Slate (dark)", "canonical": "#2a2f38" },
+      "balloon-edge-dark": { "role": "tertiary", "displayName": "Balloon Edge (dark)", "canonical": "#5a6274" },
+      "pos-dark": { "role": "semantic", "displayName": "Gain Green (dark)", "canonical": "#6fd277" },
+      "neg-dark": { "role": "semantic", "displayName": "Spend Red (dark)", "canonical": "#ff7a68" },
+      "warn-dark": { "role": "semantic", "displayName": "Caution Amber (dark)", "canonical": "#f0b429" },
+      "flame-dark": { "role": "semantic", "displayName": "Streak Orange (dark)", "canonical": "#f59a4a" },
+      "sky-top-dark": { "role": "neutral", "displayName": "Night Sky (dark)", "canonical": "linear-gradient(180deg, #0b1631 0%, #172d52 70%)" },
+      "sky-bottom-dark": { "role": "neutral", "displayName": "Night Horizon (dark)", "canonical": "#172d52" },
+      "win-dark": { "role": "neutral", "displayName": "Window Graphite (dark)", "canonical": "#161a21" },
+      "panel-dark": { "role": "neutral", "displayName": "Panel Graphite (dark)", "canonical": "#1e232c", "tonalRamp": ["#070b13", "#1f242d", "#3a404a", "#585e68", "#7a808c", "#9ea5b1", "#c4cbd7", "#e8effb"] },
+      "panel-2-dark": { "role": "neutral", "displayName": "Pale Panel (dark)", "canonical": "#262c37" },
+      "btn-face-dark": { "role": "neutral", "displayName": "Button Face (dark)", "canonical": "linear-gradient(180deg, #3e4552 0%, #333945 50%, #2b303a 100%)" },
+      "btn-edge-dark": { "role": "neutral", "displayName": "Button Edge (dark)", "canonical": "#5b6578" },
+      "panel-edge-dark": { "role": "neutral", "displayName": "Panel Edge (dark)", "canonical": "#343c4b" },
+      "edge-dark": { "role": "neutral", "displayName": "Frame Edge (dark)", "canonical": "#4c5669" },
+      "rule-dark": { "role": "neutral", "displayName": "Rule (dark)", "canonical": "#2c3340" },
+      "ink-dark": { "role": "neutral", "displayName": "Ink (dark)", "canonical": "#e8ecf5" },
+      "muted-dark": { "role": "neutral", "displayName": "Slate (dark)", "canonical": "#a6b0c5" },
+      "faint-dark": { "role": "neutral", "displayName": "Faint (dark)", "canonical": "#7c869c" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "The available balance on Home; one per screen. Heading Blue, tabular figures." },
+      "headline": { "displayName": "Headline", "purpose": "Page head under the title bar (greeting or section name), Heading Blue." },
+      "title": { "displayName": "Title", "purpose": "Window title bar, card pane-head titles, modal titles (17px). White with text-shadow on chrome." },
+      "figure": { "displayName": "Figure", "purpose": "Money inside panels: stats, pot values (26px), bill sums (21px), streak goal (24px). Tabular; scales with container width in stats strips." },
+      "start": { "displayName": "Start", "purpose": "Always italic (font-style is not expressible in the token schema). Only the green go-action (taskbar 18-19px, primary buttons 15px) and the wordmark." },
+      "body": { "displayName": "Body", "purpose": "All running text and list rows; metadata at 12.5px in Slate." },
+      "label": { "displayName": "Label", "purpose": "Field labels, stat captions, day headers. Bold sentence case, never uppercase." }
+    },
+    "shadows": [
+      { "name": "lift", "value": "0 1px 2px rgba(20,45,100,.08), 0 8px 20px -14px rgba(20,45,100,.45)", "purpose": "The single resting elevation for every content panel (light)." },
+      { "name": "lift-dark", "value": "0 1px 2px rgba(0,0,0,.3), 0 10px 22px -14px rgba(0,0,0,.8)", "purpose": "Panel lift in dark theme." },
+      { "name": "chrome-bevel", "value": "inset 0 1px 0 rgba(255,255,255,.35)", "purpose": "Top highlight that turns a chrome gradient into plastic (title bar, pane head, taskbar, Start)." },
+      { "name": "hover-glow", "value": "inset 0 0 0 2px var(--hover-glow)", "purpose": "XP amber hover ring on buttons, chips, pots, tiles, calendar cells." },
+      { "name": "sunken-task", "value": "inset 0 2px 4px rgba(0,0,0,.35)", "purpose": "Active taskbar button, pressed in, over a dark navy wash." },
+      { "name": "selection-ring", "value": "0 0 0 2px var(--panel), 0 0 0 4px var(--select)", "purpose": "Selected swatch, today's no-spend day." },
+      { "name": "window", "value": "0 2px 0 rgba(255,255,255,.4) inset, 0 24px 60px -30px rgba(10,30,80,.7)", "purpose": "The desktop app window floating on the wallpaper." },
+      { "name": "dialog", "value": "0 30px 60px -25px rgba(0,0,0,.55)", "purpose": "Centered dialog window (640px and up)." },
+      { "name": "sheet", "value": "0 -10px 40px -10px rgba(0,0,0,.4)", "purpose": "Bottom-sheet dialog on phones." },
+      { "name": "balloon", "value": "2px 4px 14px rgba(0,0,0,.25)", "purpose": "Toast balloons and chart tooltips, offset down-right." }
+    ],
+    "motion": [
+      { "name": "page-turn", "value": "160ms ease-out, translateY(6px) to 0", "purpose": "Content enters when switching sections." },
+      { "name": "sheet-rise", "value": "transform .24s cubic-bezier(.2,.8,.2,1)", "purpose": "Bottom-sheet dialog slides up on phones." },
+      { "name": "dialog-in", "value": "transform .18s ease-out, opacity .18s ease-out (scale .97 to 1)", "purpose": "Centered dialog appears at 640px and up; backdrop fades in .18s." },
+      { "name": "balloon-in", "value": "transform .2s ease-out, opacity .2s ease-out (translateY 10px)", "purpose": "Toast balloon rises into place." },
+      { "name": "switch", "value": "transform .15s ease-out", "purpose": "Switch knob slide." },
+      { "name": "reduced-motion", "value": "all durations .01ms", "purpose": "prefers-reduced-motion collapses every transition and animation." }
+    ],
+    "breakpoints": [
+      { "name": "phone-narrow", "value": "480px" },
+      { "name": "btn-grid", "value": "560px" },
+      { "name": "dialog-window", "value": "640px" },
+      { "name": "two-up", "value": "760px" },
+      { "name": "desktop-chrome", "value": "900px" },
+      { "name": "settings-two-col", "value": "960px" },
+      { "name": "home-split", "value": "1000px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Title Bar",
+      "kind": "nav",
+      "refersTo": "titlebar",
+      "description": "The window title bar on every screen and dialog: Luna blue gradient, glass icon badge, white Trebuchet title, glass buttons.",
+      "html": "<div class=\"ds-titlebar\"><span class=\"ds-tb-icon\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z\"/></svg></span><span class=\"ds-tb-title\">Início — Banco do Murilo</span><button class=\"ds-tb-btn\" aria-label=\"Ocultar valores\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"><path d=\"M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/></svg></button></div>",
+      "css": ".ds-titlebar { display: flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 6px 0 10px; color: #fff; background: var(--title-bar, linear-gradient(180deg, #5d9cf5 0%, #2f74e3 14%, #2463d6 50%, #1f58c8 86%, #1a4cb4 100%)); box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 1px 0 rgba(10,40,110,.5); border-radius: 9px 9px 0 0; } .ds-tb-icon { width: 22px; height: 22px; display: grid; place-items: center; border-radius: 5px; background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.35); } .ds-tb-icon svg { width: 15px; height: 15px; } .ds-tb-title { flex: 1; font-family: 'Trebuchet MS', 'Fira Sans', sans-serif; font-weight: 700; font-size: 15px; text-shadow: 0 1px 1px rgba(0,0,0,.45); } .ds-tb-btn { height: 30px; width: 30px; display: grid; place-items: center; border-radius: 5px; color: #fff; cursor: pointer; background: linear-gradient(180deg, rgba(255,255,255,.32), rgba(255,255,255,.1)); border: 1px solid rgba(255,255,255,.55); box-shadow: 0 1px 1px rgba(0,0,0,.2); } .ds-tb-btn svg { width: 18px; height: 18px; } .ds-tb-btn:hover { background: linear-gradient(180deg, rgba(255,255,255,.45), rgba(255,255,255,.18)); } .ds-tb-btn:focus-visible { outline: 2px dotted #fff; outline-offset: 2px; }"
+    },
+    {
+      "name": "Primary Button (Start)",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The single go-action of a region: Start Green gradient with white italic Trebuchet.",
+      "html": "<button class=\"ds-btn-primary\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"round\"><path d=\"M5 12h14\"/></svg>Gasto</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 42px; padding: 0 16px; border-radius: 6px; cursor: pointer; background: var(--start, linear-gradient(180deg, #74d26d 0%, #45b141 40%, #2f962d 60%, #2b8d29 100%)); color: #fff; border: 1px solid var(--start-edge, #1f6b1d); font-family: 'Trebuchet MS', 'Fira Sans', sans-serif; font-style: italic; font-weight: 700; font-size: 15px; text-shadow: 0 1px 1px rgba(0,0,0,.4); box-shadow: inset 0 1px 0 rgba(255,255,255,.45), 0 1px 2px rgba(0,0,0,.2); } .ds-btn-primary svg { width: 18px; height: 18px; } .ds-btn-primary:hover { filter: brightness(1.06); box-shadow: inset 0 0 0 2px rgba(255,255,255,.35), 0 1px 2px rgba(0,0,0,.2); } .ds-btn-primary:active { filter: brightness(.94); } .ds-btn-primary:focus-visible { outline: 2px dotted var(--ink, #1d2a44); outline-offset: 2px; }"
+    },
+    {
+      "name": "Default Button",
+      "kind": "button",
+      "refersTo": "button",
+      "description": "Bevelled XP button face; amber ring on hover, pressed gradient on active.",
+      "html": "<button class=\"ds-btn\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"round\"><path d=\"M12 5v14M5 12h14\"/></svg>Receita</button>",
+      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 42px; padding: 0 16px; border-radius: 6px; cursor: pointer; font-family: Tahoma, Verdana, 'Segoe UI', sans-serif; font-size: 14px; font-weight: 700; background: var(--btn, linear-gradient(180deg, #ffffff 0%, #f5f4ef 50%, #e7e5dc 100%)); color: var(--ink, #1d2a44); border: 1px solid var(--btn-edge, #3a5a99); box-shadow: 0 1px 1px rgba(0,0,0,.08); } .ds-btn svg { width: 18px; height: 18px; } .ds-btn:hover { box-shadow: inset 0 0 0 2px var(--hover-glow, #f5b742), 0 1px 1px rgba(0,0,0,.08); } .ds-btn:active { background: var(--btn-press, linear-gradient(180deg, #e4e2d8 0%, #f1f0ea 100%)); } .ds-btn:focus-visible { outline: 2px dotted var(--ink, #1d2a44); outline-offset: 2px; }"
+    },
+    {
+      "name": "Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Pill filter chip; selected turns Luna blue.",
+      "html": "<div class=\"ds-chips\"><button class=\"ds-chip ds-chip-on\">Este mês</button><button class=\"ds-chip\">Mercado</button><button class=\"ds-chip\">Transporte</button></div>",
+      "css": ".ds-chips { display: flex; gap: 6px; flex-wrap: wrap; } .ds-chip { height: 34px; padding: 0 14px; border-radius: 999px; cursor: pointer; border: 1px solid var(--panel-edge, #b9cbec); background: var(--btn, linear-gradient(180deg, #ffffff 0%, #f5f4ef 50%, #e7e5dc 100%)); color: var(--ink, #1d2a44); font-family: Tahoma, Verdana, sans-serif; font-size: 13px; font-weight: 700; } .ds-chip:hover { box-shadow: inset 0 0 0 2px var(--hover-glow, #f5b742); } .ds-chip:focus-visible { outline: 2px dotted var(--ink, #1d2a44); outline-offset: 2px; } .ds-chip-on { background: linear-gradient(180deg, #5d9cf5, #2463d6); color: #fff; border-color: #1a4cb4; text-shadow: 0 1px 1px rgba(0,0,0,.3); }"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Labelled 46px field; Selection Blue border and halo on focus.",
+      "html": "<label class=\"ds-field\"><span>Descrição</span><input class=\"ds-input\" placeholder=\"Ex: Almoço, Uber, Mercado…\"></label>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 6px; font-family: Tahoma, Verdana, sans-serif; } .ds-field > span { font-size: 12.5px; font-weight: 700; color: var(--muted, #55617b); } .ds-input { height: 46px; border-radius: 6px; border: 1px solid #7f9db9; background: var(--panel, #fff); color: var(--ink, #1d2a44); padding: 0 12px; font: inherit; font-size: 16px; outline: none; box-shadow: inset 0 1px 2px rgba(0,0,0,.08); } .ds-input::placeholder { color: var(--faint, #8790a6); } .ds-input:focus { border-color: var(--select, #316ac5); box-shadow: 0 0 0 3px color-mix(in srgb, var(--select, #316ac5) 25%, transparent); }"
+    },
+    {
+      "name": "Panel Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "White panel with a pane-blue gradient header bled to its edges; the one shared lift.",
+      "html": "<section class=\"ds-card\"><div class=\"ds-card-head\"><h3>Gastos por categoria</h3><small>outubro</small></div><div class=\"ds-row\"><span>Mercado</span><b>R$ 812,40</b></div><div class=\"ds-row\"><span>Transporte</span><b>R$ 236,00</b></div></section>",
+      "css": ".ds-card { background: var(--panel, #fff); color: var(--ink, #1d2a44); border: 1px solid var(--panel-edge, #b9cbec); border-radius: 10px; padding: 16px; box-shadow: var(--lift, 0 1px 2px rgba(20,45,100,.08), 0 8px 20px -14px rgba(20,45,100,.45)); font-family: Tahoma, Verdana, sans-serif; font-size: 15px; } .ds-card-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: -16px -16px 14px; padding: 9px 14px; min-height: 40px; background: var(--pane-head, linear-gradient(90deg, #2c64d4 0%, #4d8cf0 100%)); color: #fff; border-radius: 9px 9px 0 0; box-shadow: inset 0 1px 0 rgba(255,255,255,.3); } .ds-card-head h3 { margin: 0; font-family: 'Trebuchet MS', 'Fira Sans', sans-serif; font-weight: 700; font-size: 15px; text-shadow: 0 1px 1px rgba(0,0,0,.3); } .ds-card-head small { color: rgba(255,255,255,.88); font-size: 12.5px; } .ds-row { display: flex; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid var(--rule, #dfe6f4); } .ds-row:last-child { border: 0; } .ds-row b { font-variant-numeric: tabular-nums; }"
+    },
+    {
+      "name": "Taskbar",
+      "kind": "nav",
+      "refersTo": "taskbar-start",
+      "description": "Bottom taskbar: green italic Lançar Start tab, translucent task buttons, sunken active task.",
+      "html": "<nav class=\"ds-taskbar\"><button class=\"ds-start\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"round\"><path d=\"M12 5v14M5 12h14\"/></svg>Lançar</button><div class=\"ds-tasks\"><a class=\"ds-task ds-task-on\" href=\"#\">Início</a><a class=\"ds-task\" href=\"#\">Extrato</a><a class=\"ds-task\" href=\"#\">Potes</a></div></nav>",
+      "css": ".ds-taskbar { display: flex; align-items: stretch; gap: 6px; height: 48px; padding: 4px 6px 4px 0; background: var(--taskbar, linear-gradient(180deg, #4a8cf4 0%, #2a67dc 7%, #2459d2 50%, #2152c6 90%, #1c47ae 100%)); border-top: 1px solid rgba(10,40,120,.8); box-shadow: inset 0 1px 0 rgba(255,255,255,.35); } .ds-start { display: flex; align-items: center; gap: 6px; padding: 0 22px 0 12px; border-radius: 0 18px 18px 0; cursor: pointer; background: var(--start, linear-gradient(180deg, #74d26d 0%, #45b141 40%, #2f962d 60%, #2b8d29 100%)); color: #fff; border: 1px solid var(--start-edge, #1f6b1d); border-left: 0; font-family: 'Trebuchet MS', 'Fira Sans', sans-serif; font-style: italic; font-weight: 700; font-size: 18px; text-shadow: 0 1px 2px rgba(0,0,0,.45); box-shadow: inset 0 1px 0 rgba(255,255,255,.5), 2px 0 6px -2px rgba(0,0,0,.35); } .ds-start svg { width: 20px; height: 20px; } .ds-start:hover { filter: brightness(1.06); } .ds-start:focus-visible, .ds-task:focus-visible { outline: 2px dotted #fff; outline-offset: -4px; } .ds-tasks { display: flex; gap: 4px; flex: 1; } .ds-task { flex: 0 1 140px; display: flex; align-items: center; padding: 0 12px; border-radius: 5px; color: #fff; text-decoration: none; font-family: Tahoma, Verdana, sans-serif; font-size: 13px; background: linear-gradient(180deg, rgba(255,255,255,.24), rgba(255,255,255,.08)); border: 1px solid rgba(0,20,80,.35); box-shadow: inset 0 1px 0 rgba(255,255,255,.3); text-shadow: 0 1px 1px rgba(0,0,0,.35); } .ds-task:hover { background: linear-gradient(180deg, rgba(255,255,255,.34), rgba(255,255,255,.14)); } .ds-task-on { background: linear-gradient(180deg, rgba(0,20,70,.45), rgba(0,20,70,.2)); box-shadow: inset 0 2px 4px rgba(0,0,0,.35); }"
+    },
+    {
+      "name": "Property-Sheet Tabs",
+      "kind": "nav",
+      "refersTo": "tab-on",
+      "description": "XP tabs: the active tab joins the panel and gets the amber top stripe.",
+      "html": "<div class=\"ds-seg\"><button class=\"ds-seg-on\">Gasto</button><button>Receita</button><button>Transferir</button></div>",
+      "css": ".ds-seg { display: flex; gap: 2px; padding: 0 4px; border-bottom: 1px solid var(--edge, #7f9bd8); font-family: Tahoma, Verdana, sans-serif; } .ds-seg button { flex: 1; height: 40px; margin-bottom: -1px; border-radius: 7px 7px 0 0; cursor: pointer; font: inherit; font-size: 14px; font-weight: 700; color: var(--muted, #55617b); background: var(--panel-2, #f0f4fc); border: 1px solid var(--rule, #dfe6f4); border-bottom-color: var(--edge, #7f9bd8); } .ds-seg button:hover { color: var(--ink, #1d2a44); background: var(--panel, #fff); } .ds-seg button:focus-visible { outline: 2px dotted var(--ink, #1d2a44); outline-offset: 2px; } .ds-seg button.ds-seg-on { background: var(--panel, #fff); color: var(--neg, #cf3a2b); border-color: var(--edge, #7f9bd8); border-bottom-color: var(--panel, #fff); box-shadow: inset 0 3px 0 var(--hover-glow, #f5b742); }"
+    },
+    {
+      "name": "Block Progress Bar",
+      "kind": "custom",
+      "refersTo": "card",
+      "description": "XP segmented progress: glossy green blocks in an inset trough; amber near limit, red over.",
+      "html": "<div class=\"ds-bar\"><i style=\"width:62%\"></i></div>",
+      "css": ".ds-bar { width: 260px; height: 14px; padding: 1px; border-radius: 4px; background: var(--panel, #fff); border: 1px solid var(--edge, #7f9bd8); box-shadow: inset 0 1px 2px rgba(0,0,0,.12); overflow: hidden; } .ds-bar i { display: block; height: 100%; border-radius: 2px; background: repeating-linear-gradient(90deg, transparent 0 8px, var(--panel, #fff) 8px 10px), linear-gradient(180deg, color-mix(in srgb, #3cba2c 45%, #fff) 0%, #3cba2c 55%, color-mix(in srgb, #3cba2c 80%, #000) 100%); }"
+    },
+    {
+      "name": "Tray Balloon",
+      "kind": "custom",
+      "refersTo": "balloon",
+      "description": "Yellow XP balloon for toasts, with an underlined action and a tail at bottom right.",
+      "html": "<div class=\"ds-balloon\">Gasto lançado. <button>Desfazer</button></div>",
+      "css": ".ds-balloon { position: relative; display: inline-flex; gap: 16px; align-items: center; max-width: 440px; padding: 12px 16px; border-radius: 10px; background: var(--balloon, #ffffe1); color: var(--ink, #1d2a44); border: 1px solid var(--balloon-edge, #6f6b58); font-family: Tahoma, Verdana, sans-serif; font-size: 14.5px; font-weight: 700; box-shadow: 2px 4px 14px rgba(0,0,0,.25); } .ds-balloon::after { content: \"\"; position: absolute; right: 34px; bottom: -8px; width: 14px; height: 14px; background: var(--balloon, #ffffe1); border-right: 1px solid var(--balloon-edge, #6f6b58); border-bottom: 1px solid var(--balloon-edge, #6f6b58); transform: rotate(45deg); } .ds-balloon button { background: none; border: 0; padding: 0; cursor: pointer; font: inherit; color: var(--toast-link, #1c4ab0); text-decoration: underline; text-underline-offset: 3px; } .ds-balloon button:focus-visible { outline: 2px dotted var(--ink, #1d2a44); outline-offset: 2px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Reupholstered Desktop",
+    "overview": "The app is a program window sitting on Murilo's own early-2000s desktop: a sky-and-hill wallpaper behind, a glossy blue title bar on top, an Explorer-style task pane on the left, and a blue taskbar pinned to the bottom with a green \"Lançar\" button where Start used to be. Every piece of chrome is borrowed from Windows XP (bevelled buttons, gradient pane headers, a dotted focus outline, yellow tray balloons, segmented green progress blocks, round glossy status icons), and every piece has been reupholstered for comfort: reading-size type (15px body), generous padding, softened edges, a calm near-white window, and a full graphite dark theme in which the same window is rendered in charcoal instead of Luna blue.\n\nDensity is relaxed, not dense. Panels breathe with 14px between them and 16px inside; money is always the largest thing on any panel and always set in tabular figures. The direction was pinned by the owner (\"bem anos 2000, Windows XP, modernizado, confortável, com modo escuro\"), and it replaced a modern \"reference manual\" style he tried and rejected. It also rejects the generic banking-app look of white cards with a purple accent.\n\nThe chrome is loud and the content is quiet. Gloss, gradients and bevels live on the frame (title bar, taskbar, pane heads, buttons, icons); content surfaces are flat white (or flat graphite) panels with hairline blue-grey edges, so the numbers stay legible.",
+    "keyCharacteristics": [
+      "A window on a wallpaper: sky gradient with two drawn hills (night sky with stars and dark hills in dark mode).",
+      "Glossy chrome, flat content: gradients belong to title bars, pane heads, taskbar and buttons, never to reading surfaces.",
+      "Trebuchet MS for every title and every money figure; Tahoma for everything you read.",
+      "Orange glow on hover, dotted outline on focus, sunken look for the active task.",
+      "Green means \"do it\" (log, save, progress); blue means \"you are here\" (selection, active chip, active nav).",
+      "Light Luna blue and dark graphite are two renderings of the same window, not two designs."
+    ],
+    "rules": [
+      { "name": "The Gloss Belongs to the Frame Rule", "body": "Gradients, bevels and highlights live on chrome (title bars, pane heads, taskbar, buttons, icon badges, jars, cards' plastic). Reading surfaces are flat Panel White or flat graphite. If text is longer than a label, it sits on a flat panel.", "section": "colors" },
+      { "name": "The Green Means Go Rule", "body": "Start Green marks the one action the screen wants you to take, and success. Blue marks where you are. Never swap them: a selected filter is blue, never green; the log button is green, never blue.", "section": "colors" },
+      { "name": "The Two Renderings Rule", "body": "Every token has a dark twin and every component must work with both. Dark mode keeps the XP shapes and bevels and swaps Luna blue chrome for graphite; Start Green, Close Red and the cream balloon (as dark slate) keep their roles.", "section": "colors" },
+      { "name": "The Money Is Trebuchet Rule", "body": "Every amount that matters is Trebuchet 700 with tabular figures. Amounts inside running text or list rows use Tahoma 700 with tabular figures. Money is never set in a light weight and never truncated.", "section": "typography" },
+      { "name": "The Italic Is the Start Button Rule", "body": "Italic Trebuchet appears only on the green go-action and the wordmark. Nothing else is italic.", "section": "typography" },
+      { "name": "The Sentence Case Rule", "body": "Labels and section titles are bold sentence case in Slate or Heading Blue. The system has no uppercase tracking labels.", "section": "typography" },
+      { "name": "The One Lift Rule", "body": "Content panels share a single elevation (--lift). Do not invent intermediate shadow levels; hierarchy comes from pane-head color and type size, not stacked shadows.", "section": "elevation" },
+      { "name": "The Ring, Not the Raise Rule", "body": "Interactive surfaces respond to hover with the inset amber ring (or a brightness bump on glossy green), never by lifting or growing.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do put new screens inside the window: title bar with section name, page head in Heading Blue, content as Panel White cards with pane-blue headers.",
+      "Do give every new token and component a dark twin under [data-theme=\"dark\"]; dark chrome is graphite (title-graphite), not blue.",
+      "Do use Start Green (gradient, white italic Trebuchet) for the single go-action of a region, and Selection Blue for current/selected state.",
+      "Do set money in Trebuchet 700 with tabular figures, and let figures in strips scale with container width instead of truncating.",
+      "Do use the amber inset ring for hover, the dotted 2px outline for focus, and the cream balloon for anything the app says to Murilo.",
+      "Do keep the 14px panel rhythm, 16px card padding, 15px body and 46px inputs; comfort is part of the brief.",
+      "Do draw chrome icons as inline 24px stroke SVGs (2px stroke, round caps), placed on glossy badges where the XP original had colored icons.",
+      "Do reach for XP's own materials before inventing: bevels, pane heads, orbs, block progress bars, property-sheet tabs, balloons."
+    ],
+    "donts": [
+      "Don't put gradients, gloss or text-shadow on reading surfaces or body text; gloss belongs to the frame.",
+      "Don't fall back to the generic banking-app look: white cards with a purple accent, flat minimal chrome, or the \"reference manual\" style Murilo already rejected.",
+      "Don't add uppercase tracked labels or eyebrows above headings; labels are bold sentence case.",
+      "Don't use italic anywhere except the green Start action and the wordmark.",
+      "Don't lift elements on hover or stack extra shadow levels; panels share one lift.",
+      "Don't use Start Green for selection, or Selection Blue for the primary action.",
+      "Don't place small (under 15px) white text on the light end of the Start Green or pane-blue gradients; white text there must be 15px+ bold with its dark text-shadow.",
+      "Don't use Faint for text people need to read; it is for placeholders and chart axes only."
+    ]
+  }
+}
